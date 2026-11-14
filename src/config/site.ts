@@ -124,7 +124,7 @@ export const nav: NavItem[] = [
     href: "/programma",
     label: "Programma",
     icon: "calendar",
-    status: "binnenkort",
+    status: "live",
   },
   { href: "/paklijst", label: "Paklijst", icon: "bag", status: "binnenkort" },
   {

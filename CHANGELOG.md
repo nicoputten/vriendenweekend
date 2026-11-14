@@ -11,6 +11,7 @@ All notable changes. Format: [Keep a Changelog](https://keepachangelog.com/en/1.
 
 ### Added
 
+- Programma page: loose programme per day (Friday to Monday) including the Vriendenweekend Quiz by Suus & Nico, and the three cooking evenings with two spots each. Signing up follows after login.
 - New look from the approved design: forest green, amber and cream, with self-hosted Fraunces and Inter fonts.
 - Desktop pill navigation and a mobile burger menu with a dark sheet.
 - Home page with hero, countdown, "Doe mee" pay card with days left until the deadline, what the €250 covers, the plan in four steps and tiles for every page.

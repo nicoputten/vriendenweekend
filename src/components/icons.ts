@@ -35,6 +35,7 @@ export const icons = {
   hike: '<path d="m4 20 5-9 4 5 3-4 4 8z"/><circle cx="16" cy="5" r="2"/>',
   bell: '<path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 0 0 4 0"/>',
   list: '<path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="m4 6 1 1 2-2"/><path d="m4 12 1 1 2-2"/><path d="m4 18 1 1 2-2"/>',
+  lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
   chat: '<path d="M4 5h16v11H9l-5 4z"/>',
 } as const;
 
