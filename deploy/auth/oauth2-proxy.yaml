@@ -1,0 +1,39 @@
+# oauth2-proxy alpha config. Only the provider and upstream settings live here;
+# cookie and allow-list settings are environment variables in the TrueNAS app.
+# ${VARIABLES} are filled in from the environment by oauth2-proxy at startup.
+# See docs/DEPLOYMENT.md.
+server:
+  bindAddress: 0.0.0.0:4180
+
+# Nginx in the site container serves the pages and only asks oauth2-proxy
+# whether a visitor is logged in (auth_request), so there is no real upstream.
+upstreamConfig:
+  upstreams:
+    - id: static
+      path: /
+      static: true
+      staticCode: 202
+
+providers:
+  - id: dex
+    provider: oidc
+    name: Dex
+    clientID: vriendenweekend
+    clientSecret: ${OAUTH2_PROXY_CLIENT_SECRET}
+    scope: openid email profile
+    # The browser goes to Dex through the public URL; oauth2-proxy talks to
+    # Dex directly inside the app's network, so no hairpin NAT is needed.
+    loginURL: ${PUBLIC_URL}/dex/auth
+    redeemURL: http://dex:5556/dex/token
+    oidcConfig:
+      issuerURL: ${PUBLIC_URL}/dex
+      jwksURL: http://dex:5556/dex/keys
+      skipDiscovery: true
+      emailClaim: email
+      audienceClaims: [aud]
+    # Lets the login page pick Google or Microsoft directly:
+    # /oauth2/start?connector_id=google skips Dex's own chooser.
+    loginURLParameters:
+      - name: connector_id
+        allow:
+          - pattern: ^[a-z-]+$

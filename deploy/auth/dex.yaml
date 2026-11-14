@@ -1,0 +1,62 @@
+{{- /*
+  Dex config (login broker for Google and Microsoft). Dex's container renders
+  this file with gomplate at startup, so all values come from environment
+  variables set in the TrueNAS app; nothing private is stored in this file.
+  See docs/DEPLOYMENT.md.
+*/ -}}
+issuer: {{ getenv "PUBLIC_URL" | required "PUBLIC_URL is required" }}/dex
+
+# Dex only holds short-lived login state (auth codes, signing keys); the login
+# session itself lives in oauth2-proxy's cookie. Memory storage keeps the
+# container stateless and read-only.
+storage:
+  type: memory
+
+web:
+  http: 0.0.0.0:5556
+
+logger:
+  level: {{ getenv "DEX_LOG_LEVEL" "info" }}
+
+oauth2:
+  responseTypes: [code]
+  skipApprovalScreen: true
+
+staticClients:
+  - id: vriendenweekend
+    name: Vriendenweekend
+    secretEnv: OAUTH2_PROXY_CLIENT_SECRET
+    redirectURIs:
+      - {{ getenv "PUBLIC_URL" }}/oauth2/callback
+
+connectors:
+{{- if getenv "GOOGLE_CLIENT_ID" }}
+  - type: google
+    id: google
+    name: Google
+    config:
+      clientID: {{ getenv "GOOGLE_CLIENT_ID" }}
+      clientSecret: {{ getenv "GOOGLE_CLIENT_SECRET" | required "GOOGLE_CLIENT_SECRET is required" }}
+      redirectURI: {{ getenv "PUBLIC_URL" }}/dex/callback
+{{- end }}
+{{- if getenv "MICROSOFT_CLIENT_ID" }}
+  - type: microsoft
+    id: microsoft
+    name: Microsoft
+    config:
+      clientID: {{ getenv "MICROSOFT_CLIENT_ID" }}
+      clientSecret: {{ getenv "MICROSOFT_CLIENT_SECRET" | required "MICROSOFT_CLIENT_SECRET is required" }}
+      redirectURI: {{ getenv "PUBLIC_URL" }}/dex/callback
+      # "common" accepts both personal (outlook.com, hotmail.com) and work or school accounts.
+      tenant: common
+{{- end }}
+{{- if getenv "DEX_MOCK_LOGIN" }}
+  # Test only (CI): log in as a fixed fake user without an external provider.
+  # Two of them, so the test can check that connector_id skips Dex's chooser.
+  - type: mockCallback
+    id: mock
+    name: Mock
+  - type: mockCallback
+    id: mock-other
+    name: Mock other
+{{- end }}

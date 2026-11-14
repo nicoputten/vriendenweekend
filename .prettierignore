@@ -5,3 +5,5 @@ package-lock.json
 playwright-report
 test-results
 LICENSE
+# Go template (gomplate), not plain YAML
+deploy/auth/dex.yaml

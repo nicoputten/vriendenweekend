@@ -52,3 +52,12 @@ jobs:
           push: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  auth:
+    name: Login integration test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - name: Site, oauth2-proxy and Dex with a mock login
+        run: tests/auth/run.sh

@@ -9,7 +9,8 @@
 - **Design.** The approved design lives in a separate design canvas. Colours are CSS custom properties in `src/styles/global.css`; icons are inline stroke SVGs in `src/components/icons.ts`, rendered with `Icon.astro`. Fonts (Fraunces for headings, Inter for body text) are self-hosted through Fontsource npm packages.
 - **No external resources.** No Google Fonts, analytics or embeds. That keeps the site fast and privacy-friendly, and allows a strict Content-Security-Policy.
 - **Nginx in a container.** The Docker image contains the built site and its own Nginx (unprivileged, port 8080). TLS and the domain are handled by the existing reverse proxy on the TrueNAS host.
-- **Later: login and a small API.** Login (US-004) will be oauth2-proxy in front of the site, without changing the static site. Features that need storage (US-005, US-006) get a separate API container with SQLite.
+- **Login without a backend.** Login (US-004) uses oauth2-proxy (session cookie, allow list) with Dex as a broker for Google and Microsoft, as extra containers next to the site. The site's own Nginx routes `/oauth2/` and `/dex/` to them and protects members-only paths (`/leden`) with `auth_request`. The pages stay static: a small script asks `/oauth2/userinfo` who is logged in. Information pages stay public. See [US-004](stories/US-004-login.md).
+- **Later: a small API.** Features that need storage (US-005, US-006) get a separate API container with SQLite, behind the same login.
 
 ## Folder structure
 
@@ -20,7 +21,8 @@
 │   ├── workflows/release.yml   # Tag vX.Y.Z: image to GHCR and a GitHub release
 │   └── pull_request_template.md
 ├── deploy/
-│   ├── nginx.conf              # Nginx inside the site container
+│   ├── auth/                   # oauth2-proxy and Dex config for the login
+│   ├── nginx.conf              # Nginx inside the site container (incl. login routing)
 │   ├── security-headers.conf   # CSP and other security headers
 │   ├── truenas-app.yaml        # YAML for the TrueNAS Custom App
 │   └── reverse-proxy.example.conf
@@ -33,13 +35,16 @@
 ├── src/
 │   ├── components/             # Reusable Astro components
 │   ├── config/site.ts          # All data for this edition
+│   ├── config/auth.ts          # Login providers and login page copy
 │   ├── layouts/Base.astro      # HTML skeleton, header and footer
 │   ├── lib/                    # Pure TypeScript functions (tested with Vitest)
 │   ├── pages/                  # One file per page; file name = URL
+│   ├── scripts/session.ts      # Shows the login state in the header and footer
 │   └── styles/global.css       # Colours, typography and base rules
 ├── tests/
 │   ├── unit/                   # Vitest
-│   └── e2e/                    # Playwright (desktop + mobile)
+│   ├── e2e/                    # Playwright (desktop + mobile)
+│   └── auth/                   # Login integration test (Docker Compose + curl)
 ├── Dockerfile
 └── CHANGELOG.md
 ```
@@ -57,6 +62,7 @@ The public URL is not stored in the repo. Set `SITE_URL` at build time if a feat
 ## Testing
 
 - **Unit (Vitest):** logic in `src/lib` and sanity checks on the config (for example: deadline before the weekend, payment link is a bunq.me link).
+- **Login integration (`tests/auth/run.sh`):** starts the site image, oauth2-proxy and Dex (with a mock login instead of Google or Microsoft) and walks through the login flow with curl: redirects, session, allow list, logout.
 - **End-to-end (Playwright):** runs against the built site (`astro preview`) in a desktop and a mobile profile. Checks the home page content, navigation to every page, the 404 page and that there is no horizontal scroll at 360 px.
 
 ## Security
@@ -64,3 +70,4 @@ The public URL is not stored in the repo. Set `SITE_URL` at build time if a feat
 - Strict CSP: only same-origin scripts, no inline scripts (Astro is configured to bundle scripts as separate files).
 - `robots.txt` and `noindex`: the site should not appear in search engines.
 - The container runs as non-root, read-only, without extra capabilities.
+- Login: the session cookie is encrypted, `HttpOnly` and `Secure`; the `rd` return path is limited to paths on this site (`src/lib/auth.ts`, and oauth2-proxy checks it too); the allow list, client IDs and secrets live only on the server.

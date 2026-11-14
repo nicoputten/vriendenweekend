@@ -1,0 +1,242 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import PageHero from "../components/PageHero.astro";
+import { auth, loginPage } from "../config/auth";
+import { loginUrl, logoutUrl } from "../lib/auth";
+---
+
+<Base title={loginPage.title}>
+  <PageHero
+    kicker="Alleen voor de groep"
+    title={loginPage.heroTitle}
+    intro={loginPage.heroText}
+  />
+
+  <div class="container layout">
+    <section class="card login" aria-labelledby="inloggen-titel">
+      <h2 id="inloggen-titel">{loginPage.title}</h2>
+
+      <p class="error" role="alert" data-login-error hidden></p>
+
+      <div class="already" data-session-show="in" hidden>
+        <p>
+          Je bent al ingelogd als <strong data-user-email></strong>.
+        </p>
+        <a class="button" href={auth.membersPath}>
+          Naar de deelnemerspagina
+          <Icon name="arrowRight" size={20} strokeWidth={2} />
+        </a>
+        <a class="switch" href={logoutUrl}>
+          Uitloggen
+        </a>
+      </div>
+
+      <div class="providers">
+        {auth.providers.map((provider) => (
+          <a
+            class="provider"
+            href={loginUrl(provider.id)}
+            data-provider={provider.id}
+          >
+            {provider.id === "google" ? (
+              <span class="mark mark-google" aria-hidden="true">
+                G
+              </span>
+            ) : (
+              <span class="mark mark-microsoft" aria-hidden="true">
+                <span />
+                <span />
+                <span />
+                <span />
+              </span>
+            )}
+            {provider.label}
+          </a>
+        ))}
+      </div>
+
+      <p class="note">{loginPage.note}</p>
+    </section>
+
+    <aside class="perks" aria-labelledby="voordelen-titel">
+      <h2 id="voordelen-titel">Ingelogd zie je straks</h2>
+      <ul>
+        {loginPage.perks.map((perk) => (
+          <li>
+            <Icon name="check" size={20} strokeWidth={2.2} />
+            {perk}
+          </li>
+        ))}
+      </ul>
+    </aside>
+  </div>
+</Base>
+
+<script>
+  import { loginErrorMessage, loginUrl, type ProviderId } from "../lib/auth";
+
+  const params = new URLSearchParams(location.search);
+  const rd = params.get("rd");
+
+  document
+    .querySelectorAll<HTMLAnchorElement>("a[data-provider]")
+    .forEach((a) => {
+      a.href = loginUrl(a.dataset.provider as ProviderId, rd);
+    });
+
+  const error = document.querySelector<HTMLElement>("[data-login-error]");
+  const message = loginErrorMessage(params.get("fout"));
+  if (error && message) {
+    error.textContent = message;
+    error.hidden = false;
+  }
+</script>
+
+<style>
+  .layout {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    margin-top: 4px;
+    padding-bottom: 40px;
+  }
+  @media (min-width: 64rem) {
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+      gap: 48px;
+      align-items: start;
+      padding-bottom: 88px;
+    }
+  }
+
+  .login {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 22px 18px;
+  }
+  @media (min-width: 64rem) {
+    .login {
+      padding: 32px;
+    }
+  }
+  .login h2,
+  .perks h2 {
+    font-size: 1.5rem;
+    color: var(--c-forest-800);
+  }
+
+  .providers {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .provider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 52px;
+    padding: 0 16px;
+    border-radius: 14px;
+    background: #fff;
+    border: 1.5px solid var(--c-line);
+    color: var(--c-ink);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .provider:hover {
+    border-color: var(--c-moss);
+    color: var(--c-ink);
+  }
+  .mark {
+    flex: none;
+    width: 22px;
+    height: 22px;
+  }
+  .mark-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid #4285f4;
+    color: #4285f4;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    line-height: 1;
+  }
+  .mark-microsoft {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    width: 20px;
+    height: 20px;
+  }
+  .mark-microsoft span:nth-child(1) {
+    background: #f25022;
+  }
+  .mark-microsoft span:nth-child(2) {
+    background: #7fba00;
+  }
+  .mark-microsoft span:nth-child(3) {
+    background: #00a4ef;
+  }
+  .mark-microsoft span:nth-child(4) {
+    background: #ffb900;
+  }
+
+  .note {
+    color: var(--c-ink-soft);
+    font-size: 0.9375rem;
+  }
+  .error {
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: var(--c-amber-50);
+    color: var(--c-amber-ink);
+    font-weight: 500;
+  }
+  .already {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 12px;
+    background: var(--c-fern-25);
+  }
+  .already .button {
+    align-self: flex-start;
+  }
+  .switch {
+    align-self: flex-start;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .perks {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .perks ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .perks li {
+    display: flex;
+    gap: 10px;
+    color: var(--c-ink-soft);
+  }
+  .perks li :global(svg) {
+    flex: none;
+    color: var(--c-moss);
+    margin-top: 3px;
+  }
+</style>
