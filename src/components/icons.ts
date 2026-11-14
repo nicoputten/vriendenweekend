@@ -21,6 +21,7 @@ export const icons = {
   beer: '<path d="M5 8h10v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"/><path d="M15 11h2a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2"/><path d="M5 8a3 3 0 0 1 3.5-3.5 3 3 0 0 1 5 .5A2.5 2.5 0 0 1 15 8"/><path d="M8.5 12v5"/><path d="M11.5 12v5"/>',
   check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
   arrowRight: '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>',
+  chevronDown: '<path d="m6 9 6 6 6-6"/>',
   external:
     '<path d="M14 4h6v6"/><path d="M20 4 11 13"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
   camera:
