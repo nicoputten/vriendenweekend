@@ -1,0 +1,84 @@
+---
+import Base from "../layouts/Base.astro";
+import Countdown from "../components/Countdown.astro";
+import PayCard from "../components/PayCard.astro";
+import { event } from "../config/site";
+import { formatDateRange, nights } from "../lib/dates";
+
+const start = new Date(event.start);
+const end = new Date(event.end);
+---
+
+<Base>
+  <section class="hero">
+    <div class="container">
+      <p class="kicker">
+        {event.region} · {nights(start, end)} nachten
+      </p>
+      <h1>{event.title}</h1>
+      <p class="dates">{formatDateRange(start, end)}</p>
+      <p class="tagline">{event.tagline}</p>
+      <Countdown target={event.start} label="Nog te gaan" />
+    </div>
+  </section>
+
+  <div class="container content">
+    <PayCard />
+    <section>
+      <h2>Hoe het werkt</h2>
+      <ol>
+        <li>Je betaalt je bijdrage via de bunq-link.</li>
+        <li>Als iedereen betaald heeft, boeken we het huis.</li>
+        <li>
+          Daarna vullen we deze site met het huis, de route en het programma.
+        </li>
+      </ol>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .hero {
+    background: linear-gradient(
+      180deg,
+      var(--c-bos) 0%,
+      var(--c-bos-donker) 100%
+    );
+    color: var(--c-schuim);
+    padding-block: 3rem 2.5rem;
+    text-align: center;
+  }
+  .kicker {
+    margin: 0;
+    color: var(--c-varen);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+  }
+  h1 {
+    color: var(--c-schuim);
+    font-size: clamp(2.2rem, 8vw, 3.5rem);
+    margin: 0.25rem 0;
+  }
+  .dates {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--c-bier);
+    margin: 0;
+  }
+  .tagline {
+    margin: 0.75rem auto 1.75rem;
+    max-width: 30rem;
+  }
+  .content {
+    display: grid;
+    gap: 2rem;
+    margin-top: -1.25rem;
+  }
+  @media (min-width: 48rem) {
+    .content {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+  }
+</style>

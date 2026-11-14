@@ -1,0 +1,96 @@
+---
+import { countdown } from "../lib/countdown";
+
+interface Props {
+  target: string;
+  label: string;
+}
+
+const { target, label } = Astro.props;
+// Value at build time, so the page shows something sensible without JavaScript.
+const initial = countdown(new Date(target));
+const units = [
+  ["days", "dagen"],
+  ["hours", "uur"],
+  ["minutes", "min"],
+  ["seconds", "sec"],
+] as const;
+---
+
+<section class="countdown" data-target={target} aria-label={label}>
+  <p class="label">{label}</p>
+  <ol>
+    {units.map(([key, name]) => (
+      <li>
+        <span class="value" data-unit={key}>
+          {initial[key]}
+        </span>
+        <span class="unit">{name}</span>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .countdown {
+    text-align: center;
+  }
+  .label {
+    margin: 0 0 0.5rem;
+    color: var(--c-varen);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    max-width: 24rem;
+    margin-inline: auto;
+  }
+  li {
+    background: rgb(255 255 255 / 8%);
+    border-radius: 10px;
+    padding: 0.6rem 0.25rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--c-schuim);
+  }
+  .unit {
+    font-size: 0.75rem;
+    color: var(--c-varen);
+  }
+</style>
+
+<script>
+  import { countdown } from "../lib/countdown";
+
+  for (const el of document.querySelectorAll<HTMLElement>(
+    ".countdown[data-target]",
+  )) {
+    const target = new Date(el.dataset.target!);
+    const tick = () => {
+      const parts = countdown(target);
+      for (const span of el.querySelectorAll<HTMLElement>("[data-unit]")) {
+        span.textContent = String(
+          parts[span.dataset.unit as keyof typeof parts],
+        );
+      }
+      return parts.done;
+    };
+    tick();
+    const timer = window.setInterval(
+      () => tick() && window.clearInterval(timer),
+      1000,
+    );
+  }
+</script>

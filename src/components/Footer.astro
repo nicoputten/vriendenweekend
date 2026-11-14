@@ -1,0 +1,24 @@
+---
+import { event } from "../config/site";
+---
+
+<footer class="footer">
+  <div class="container">
+    <p>
+      {event.title} · {event.region}
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    margin-top: 4rem;
+    padding-block: 1.5rem;
+    background: var(--c-bos-donker);
+    color: var(--c-varen);
+    font-size: 0.9rem;
+  }
+  p {
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,36 @@
+---
+interface Props {
+  title: string;
+  intro: string;
+}
+
+const { title, intro } = Astro.props;
+---
+
+<section class="container soon">
+  <p class="tag">Binnenkort</p>
+  <h1>{title}</h1>
+  <p>{intro}</p>
+  <p>
+    <a href="/">Terug naar home</a>
+  </p>
+</section>
+
+<style>
+  .soon {
+    padding-block: 3rem;
+    max-width: 40rem;
+  }
+  .tag {
+    display: inline-block;
+    margin: 0;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    background: var(--c-varen);
+    color: var(--c-bos-donker);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+</style>
