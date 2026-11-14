@@ -1,25 +1,192 @@
 ---
 import Base from "../layouts/Base.astro";
-import ComingSoon from "../components/ComingSoon.astro";
+import Icon from "../components/Icon.astro";
+import PageHero from "../components/PageHero.astro";
+import { programme } from "../config/programme";
+
+const shortDate = new Intl.DateTimeFormat("nl-NL", {
+  day: "numeric",
+  month: "short",
+  timeZone: "Europe/Brussels",
+});
+const label = (iso: string) =>
+  shortDate.format(new Date(`${iso}T12:00:00+02:00`)).replace(".", "");
+const evenings = programme.days.filter((d) =>
+  (programme.cooking.evenings as readonly string[]).includes(d.day),
+);
 ---
 
 <Base title="Programma">
-  <ComingSoon
-    kicker="Vrijdag t/m maandag"
+  <PageHero
+    kicker={programme.kicker}
     title="Programma"
-    intro="Een los programma per dag, met kookavonden en de Vriendenweekend Quiz."
-    items={[
-      {
-        icon: "calendar",
-        title: "Per dag",
-        text: "Wat er op vrijdag, zaterdag, zondag en maandag gebeurt.",
-      },
-      { icon: "food", title: "Kookavonden", text: "Wie op welke avond kookt." },
-      {
-        icon: "dice",
-        title: "Spellen en de quiz",
-        text: "Bordspellen, buitenspellen en de quiz.",
-      },
-    ]}
+    intro={programme.intro}
   />
+
+  <div class="container page">
+    <section class="days" aria-label="Programma per dag">
+      {programme.days.map((day) => (
+        <article class="card day">
+          <header>
+            <h2>{day.day}</h2>
+            <time datetime={day.date}>{label(day.date)}</time>
+          </header>
+          <ul>
+            {day.items.map((item) => (
+              <li>
+                <span class="when">{item.when}</span>
+                <span>{item.what}</span>
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </section>
+
+    <section class="cooking" id="koken" aria-labelledby="koken-titel">
+      <p class="eyebrow">Wie kookt er?</p>
+      <h2 class="section-title" id="koken-titel">
+        Kookploegen
+      </h2>
+      <p class="muted">{programme.cooking.intro}</p>
+      <ul class="evenings">
+        {evenings.map((day) => (
+          <li class="card evening">
+            <div>
+              <p class="evening-day">
+                {day.day} {label(day.date)}
+              </p>
+              <p class="muted small">
+                Nog {programme.cooking.cooksPerEvening} koks nodig
+              </p>
+            </div>
+            <span class="dots" aria-hidden="true">
+              {Array.from({ length: programme.cooking.cooksPerEvening }, () => (
+                <span class="dot" />
+              ))}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <p class="note">
+        <Icon name="lock" size={18} />
+        <span>{programme.cooking.note}</span>
+      </p>
+    </section>
+  </div>
 </Base>
+
+<style>
+  .page {
+    display: grid;
+    gap: 40px;
+    margin-top: 4px;
+  }
+  @media (min-width: 64rem) {
+    .page {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: 64px;
+      align-items: start;
+    }
+  }
+
+  .days {
+    display: grid;
+    gap: 12px;
+  }
+  @media (min-width: 48rem) and (max-width: 63.99rem) {
+    .days {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .day {
+    padding: 16px 18px 8px;
+  }
+  .day header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 10px;
+  }
+  .day h2 {
+    font-size: 1.3125rem;
+  }
+  .day time {
+    font-size: 0.875rem;
+    color: var(--c-ink-soft);
+  }
+  .day ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .day li {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 10px;
+    padding: 10px 0;
+    border-top: 1px solid var(--c-line);
+  }
+  .when {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--c-moss);
+  }
+
+  .cooking {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .eyebrow + .section-title {
+    margin-top: -8px;
+  }
+  .muted {
+    color: var(--c-ink-soft);
+  }
+  .small {
+    font-size: 0.875rem;
+  }
+  .evenings {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .evening {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 16px 18px;
+  }
+  .evening-day {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--c-forest-800);
+    line-height: 1.3;
+  }
+  .dots {
+    display: flex;
+    gap: 6px;
+  }
+  .dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--c-moss);
+  }
+  .note {
+    display: flex;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--c-ink-soft);
+  }
+  .note :global(svg) {
+    flex: none;
+    margin-top: 1px;
+  }
+</style>

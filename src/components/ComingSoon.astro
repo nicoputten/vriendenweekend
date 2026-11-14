@@ -1,6 +1,6 @@
 ---
 import Icon from "./Icon.astro";
-import Mountains from "./Mountains.astro";
+import PageHero from "./PageHero.astro";
 import type { IconName } from "./icons";
 
 interface Props {
@@ -16,17 +16,7 @@ interface Props {
 const { kicker, title, intro, items, photos = false } = Astro.props;
 ---
 
-<section class="hero">
-  <div class="container hero-text">
-    <p class="kicker">{kicker}</p>
-    <h1>{title}</h1>
-    <p class="lead">{intro}</p>
-    <p>
-      <span class="badge">Binnenkort</span>
-    </p>
-  </div>
-  <Mountains />
-</section>
+<PageHero kicker={kicker} title={title} intro={intro} soon />
 
 <div class="container body">
   {photos && (
@@ -68,51 +58,6 @@ const { kicker, title, intro, items, photos = false } = Astro.props;
 </div>
 
 <style>
-  .hero {
-    position: relative;
-    background: linear-gradient(
-      180deg,
-      var(--c-forest-900) 0%,
-      var(--c-forest-800) 100%
-    );
-    color: var(--c-cream);
-    overflow: hidden;
-  }
-  .hero-text {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 28px 4px 120px;
-  }
-  .kicker {
-    font-size: 0.8125rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--c-amber-light);
-  }
-  h1 {
-    color: var(--c-cream);
-    font-size: clamp(2.25rem, 5vw, 3.5rem);
-    line-height: 1.08;
-    letter-spacing: -0.01em;
-  }
-  .lead {
-    color: var(--c-on-dark);
-    max-width: 40rem;
-  }
-  @media (min-width: 64rem) {
-    .hero-text {
-      padding: 56px 0 160px;
-      gap: 14px;
-    }
-    .lead {
-      font-size: 1.1875rem;
-    }
-  }
-
   .body {
     display: flex;
     flex-direction: column;
