@@ -1,3 +1,5 @@
+<!-- Feature PRs target `develop`. Only release/X.Y.Z and hotfix/… PRs target `main`. -->
+
 ## What and why
 
 <!-- Short description of the change and the reason for it. -->

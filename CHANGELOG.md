@@ -4,8 +4,11 @@ All notable changes. Format: [Keep a Changelog](https://keepachangelog.com/en/1.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-14
+
 ### Changed
 
+- Gitflow: features go into `develop`, releases go from `develop` to `main`. CI also runs on `develop`, Dependabot targets `develop`, and the Release workflow only runs from `main`.
 - Dependabot collects all updates into one weekly pull request and skips Node, `@types/node` and TypeScript major versions.
 - GitHub Actions bumped: `actions/checkout` v7, `docker/login-action` v4.
 

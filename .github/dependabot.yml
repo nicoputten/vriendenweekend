@@ -1,4 +1,4 @@
-# All updates are collected into a single weekly pull request.
+# All updates are collected into a single weekly pull request against develop.
 version: 2
 
 multi-ecosystem-groups:
@@ -14,6 +14,7 @@ updates:
     directory: /
     patterns: ["*"]
     multi-ecosystem-group: weekly
+    target-branch: develop
     ignore:
       # Node types must match the Node major we run on (see .nvmrc).
       - dependency-name: "@types/node"
@@ -26,11 +27,13 @@ updates:
     directory: /
     patterns: ["*"]
     multi-ecosystem-group: weekly
+    target-branch: develop
 
   - package-ecosystem: docker
     directory: /
     patterns: ["*"]
     multi-ecosystem-group: weekly
+    target-branch: develop
     ignore:
       # Stay on Node LTS; move to the next LTS major manually (with .nvmrc).
       - dependency-name: node
