@@ -7,7 +7,7 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM nginxinc/nginx-unprivileged:1.29-alpine
+FROM nginxinc/nginx-unprivileged:1.31-alpine
 ARG VERSION=dev
 LABEL org.opencontainers.image.title="vriendenweekend" \
       org.opencontainers.image.description="Website for Vriendenweekend 2027" \
