@@ -15,6 +15,7 @@ All notable changes. Format: [Keep a Changelog](https://keepachangelog.com/en/1.
 - Desktop pill navigation and a mobile burger menu with a dark sheet.
 - Home page with hero, countdown, "Doe mee" pay card with days left until the deadline, what the €250 covers, the plan in four steps and tiles for every page.
 - "Binnenkort" pages now explain what each page will contain and link back to paying.
+- "Vragen" (FAQ) page: questions grouped by topic (paying, travel, the chateau, other) that expand without JavaScript, with a "Binnenkort" label on answers that wait for the booking and a direct link per question (`/faq#carpoolen`).
 - Release workflow can be started from the Actions tab ("Run workflow"); it creates the tag from `package.json`.
 
 ## [0.1.0] - 2026-11-14

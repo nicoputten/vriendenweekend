@@ -1,34 +1,266 @@
 ---
 import Base from "../layouts/Base.astro";
-import ComingSoon from "../components/ComingSoon.astro";
+import Icon from "../components/Icon.astro";
+import Mountains from "../components/Mountains.astro";
+import { faq } from "../config/faq";
+
+const firstId = faq[0]?.items[0]?.id;
 ---
 
 <Base title="Vragen">
-  <ComingSoon
-    kicker="FAQ"
-    title="Veelgestelde vragen"
-    intro="Antwoorden op de vragen die elk jaar weer in de groepsapp voorbijkomen."
-    items={[
-      {
-        icon: "car",
-        title: "Carpoolen",
-        text: "Hoe we samen naar de Ardennen gaan.",
-      },
-      {
-        icon: "bed",
-        title: "Slaapkamers",
-        text: "Hoe de kamers verdeeld worden.",
-      },
-      {
-        icon: "rules",
-        title: "Huisregels",
-        text: "Wat wel en niet mag in het chateau.",
-      },
-      {
-        icon: "chat",
-        title: "Geld",
-        text: "Wat de €250 dekt en wat er met een overschot gebeurt.",
-      },
-    ]}
-  />
+  <section class="hero">
+    <div class="container hero-text">
+      <p class="kicker">Veelgestelde vragen</p>
+      <h1>Vragen</h1>
+      <p class="lead">Over betalen, carpoolen, slaapkamers en huisregels.</p>
+    </div>
+    <Mountains />
+  </section>
+
+  <div class="container layout">
+    <div class="groups">
+      {faq.map((group, g) => (
+        <section class="group" aria-labelledby={`groep-${g}`}>
+          <h2 id={`groep-${g}`}>{group.title}</h2>
+          <div class="card list">
+            {group.items.map((item) => (
+              <details
+                id={item.id}
+                name="faq"
+                open={item.id === firstId ? true : undefined}
+              >
+                <summary>
+                  <span class="question">{item.question}</span>
+                  {item.soon && <span class="badge">Binnenkort</span>}
+                  <span class="chevron">
+                    <Icon name="chevronDown" size={20} strokeWidth={2} />
+                  </span>
+                </summary>
+                <div class="answer">
+                  {item.answer.map((text) => (
+                    <p>{text}</p>
+                  ))}
+                  {item.link && (
+                    <a class="answer-link" href={item.link.href}>
+                      {item.link.label}
+                      <Icon name="arrowRight" size={18} strokeWidth={2} />
+                    </a>
+                  )}
+                </div>
+              </details>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <aside class="ask" aria-labelledby="vraag-titel">
+      <h2 id="vraag-titel">Staat je vraag er niet tussen?</h2>
+      <p>
+        Stel hem in de groepsapp. Het antwoord komt daarna ook op deze pagina.
+      </p>
+      <a class="button" href="/#betalen">
+        Naar betalen
+        <Icon name="arrowRight" size={20} strokeWidth={2} />
+      </a>
+    </aside>
+  </div>
 </Base>
+
+<script>
+  // Open the question a link points to (/faq#carpoolen), also on later hash changes.
+  function openFromHash() {
+    const id = decodeURIComponent(location.hash.slice(1));
+    const target = id ? document.getElementById(id) : null;
+    if (target instanceof HTMLDetailsElement) target.open = true;
+  }
+  openFromHash();
+  window.addEventListener("hashchange", openFromHash);
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    background: linear-gradient(
+      180deg,
+      var(--c-forest-900) 0%,
+      var(--c-forest-800) 100%
+    );
+    color: var(--c-cream);
+    overflow: hidden;
+  }
+  .hero-text {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 28px 4px 120px;
+  }
+  .kicker {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--c-amber-light);
+  }
+  h1 {
+    color: var(--c-cream);
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+  }
+  .lead {
+    color: var(--c-on-dark);
+    max-width: 40rem;
+  }
+  @media (min-width: 64rem) {
+    .hero-text {
+      padding: 56px 0 160px;
+      gap: 14px;
+    }
+    .lead {
+      font-size: 1.1875rem;
+    }
+  }
+
+  .layout {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    margin-top: 4px;
+    padding-bottom: 40px;
+  }
+  @media (min-width: 64rem) {
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+      gap: 48px;
+      align-items: start;
+      padding-bottom: 88px;
+    }
+    .ask {
+      grid-column: 1;
+      grid-row: 1;
+      position: sticky;
+      top: 24px;
+    }
+    .groups {
+      grid-column: 2;
+    }
+  }
+
+  .groups {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .group h2 {
+    padding: 0 4px;
+    font-size: 1.3125rem;
+    color: var(--c-forest-800);
+  }
+  @media (min-width: 64rem) {
+    .groups {
+      gap: 26px;
+    }
+    .group h2 {
+      padding: 0;
+      font-size: 1.5rem;
+    }
+  }
+
+  .list {
+    overflow: hidden;
+  }
+  details + details {
+    border-top: 1px solid var(--c-line);
+  }
+  summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 56px;
+    padding: 12px 16px;
+    font-weight: 600;
+    color: var(--c-ink);
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary:focus-visible {
+    outline-offset: -3px;
+  }
+  .question {
+    flex: 1;
+  }
+  .chevron {
+    display: flex;
+    color: var(--c-moss);
+    transition: transform 0.15s ease;
+  }
+  details[open] .chevron {
+    transform: rotate(180deg);
+  }
+  .answer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 16px 16px;
+    color: var(--c-ink-soft);
+  }
+  .answer p {
+    max-width: 42.5rem;
+  }
+  .answer-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    min-height: 44px;
+    font-weight: 600;
+  }
+  @media (min-width: 64rem) {
+    summary {
+      gap: 14px;
+      min-height: 60px;
+      padding: 14px 22px;
+    }
+    .answer {
+      padding: 0 22px 18px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .chevron {
+      transition: none;
+    }
+  }
+
+  .ask {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 24px;
+    border-radius: 22px;
+    background: var(--c-forest-900);
+    color: var(--c-cream);
+  }
+  .ask h2 {
+    color: var(--c-cream);
+    font-size: 1.5rem;
+  }
+  .ask p {
+    color: var(--c-on-dark);
+  }
+  .ask .button {
+    min-height: 50px;
+    font-size: 1rem;
+  }
+</style>
