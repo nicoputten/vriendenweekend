@@ -35,15 +35,10 @@ export const packingList = {
       items: [
         {
           id: "bedding",
-          label: "Beddengoed of slaapzak",
+          label: "Bedlinnen",
           hint: "Check bij Het chateau zodra bekend",
         },
         { id: "towels", label: "Handdoeken" },
-        {
-          id: "earplugs",
-          label: "Oordopjes",
-          hint: "Er wordt gesnurkt, beloofd",
-        },
       ],
     },
     {
@@ -55,12 +50,12 @@ export const packingList = {
         {
           id: "swimwear",
           label: "Zwemspullen",
-          hint: "Als het chateau een zwembad of sauna heeft",
+          hint: "Voor de sauna of jacuzzi",
         },
       ],
     },
     {
-      name: "Gezelligheid",
+      name: "Voor de groep",
       items: [
         {
           id: "board-game",
@@ -68,11 +63,10 @@ export const packingList = {
           hint: "Zet het in de groepsapp, dan nemen we geen vijf keer Catan mee",
         },
         {
-          id: "special-beer",
-          label: "Een bijzonder biertje om te delen",
-          hint: "Optioneel, de drank zit al in de pot",
+          id: "gift-organisers",
+          label: "Een cadeautje voor de organisatie",
+          hint: "Bier, uiteraard",
         },
-        { id: "speaker", label: "Speaker" },
       ],
     },
   ],
