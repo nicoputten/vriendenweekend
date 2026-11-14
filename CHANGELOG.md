@@ -4,6 +4,11 @@ All notable changes. Format: [Keep a Changelog](https://keepachangelog.com/en/1.
 
 ## [Unreleased]
 
+### Changed
+
+- Dependabot collects all updates into one weekly pull request and skips Node, `@types/node` and TypeScript major versions.
+- GitHub Actions bumped: `actions/checkout` v7, `docker/login-action` v4.
+
 ### Added
 
 - Release workflow can be started from the Actions tab ("Run workflow"); it creates the tag from `package.json`.
