@@ -4,6 +4,10 @@ All notable changes. Format: [Keep a Changelog](https://keepachangelog.com/en/1.
 
 ## [Unreleased]
 
+### Fixed
+
+- Dependabot config: `target-branch` moved to the weekly group, where Dependabot requires it.
+
 ## [0.2.1] - 2026-11-14
 
 ### Fixed
