@@ -132,7 +132,7 @@ export const nav: NavItem[] = [
     label: "Vragen",
     menuLabel: "Vragen (FAQ)",
     icon: "question",
-    status: "binnenkort",
+    status: "live",
   },
 ];
 

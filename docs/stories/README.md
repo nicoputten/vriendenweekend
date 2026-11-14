@@ -15,5 +15,5 @@ One file per feature. Follow the format of the existing stories: an "As a … I 
 | [US-009](US-009-nearby.md)           | "In de buurt" page                    | Waiting for booking |
 | [US-010](US-010-programme.md)        | "Programma" page                      | Done                |
 | [US-011](US-011-packing-list.md)     | "Paklijst" page                       | Done                |
-| [US-012](US-012-faq.md)              | "Veelgestelde vragen" page            | To do               |
+| [US-012](US-012-faq.md)              | "Veelgestelde vragen" page            | Done                |
 | [US-013](US-013-theme.md)            | "Forest, beer and board games" theme  | Done                |
