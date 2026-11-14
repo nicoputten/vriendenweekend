@@ -7,7 +7,7 @@ As a **participant** I want **a packing list**, so that **I don't forget anythin
 
 ## Acceptance criteria
 
-- [x] List per category (important, sleeping, clothing, games and drinks), following the approved design
+- [x] List per category (important, sleeping, clothing, for the group), following the approved design
 - [x] Items can be ticked off on a phone and are remembered in the browser (`localStorage`, nothing is sent to a server)
 - [x] Progress card shows how many items are packed, with a progress bar
 - [x] Tapping the text of an item ticks it too (whole row is the touch target); ticked items are struck through
