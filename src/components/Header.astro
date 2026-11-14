@@ -2,6 +2,8 @@
 import Brand from "./Brand.astro";
 import Icon from "./Icon.astro";
 import { nav } from "../config/site";
+import { auth } from "../config/auth";
+import { logoutUrl } from "../lib/auth";
 
 const current =
   Astro.url.pathname.replace(/\.html$/, "").replace(/\/(index)?$/, "") || "/";
@@ -29,6 +31,30 @@ const isCurrent = (href: string) => (current === href ? "page" : undefined);
         </a>
       ))}
     </nav>
+
+    <div class="account">
+      <a
+        class="account-link"
+        href={auth.loginPath}
+        data-login-link
+        data-session-show="out"
+        hidden
+      >
+        <Icon name="lock" size={18} />
+        Inloggen
+      </a>
+      <a
+        class="account-link"
+        href={auth.membersPath}
+        aria-current={isCurrent(auth.membersPath)}
+        data-session-show="in"
+        hidden
+      >
+        <Icon name="user" size={18} />
+        <span class="visually-hidden">Ingelogd als </span>
+        <span class="account-name" data-user-name></span>
+      </a>
+    </div>
 
     <button
       class="burger"
@@ -62,6 +88,22 @@ const isCurrent = (href: string) => (current === href ? "page" : undefined);
           {item.status === "binnenkort" && <span class="soon">Binnenkort</span>}
         </a>
       ))}
+      <div class="sheet-account" data-session-show="out" hidden>
+        <a href={auth.loginPath} data-login-link>
+          <Icon name="lock" />
+          <span>Inloggen</span>
+        </a>
+      </div>
+      <div class="sheet-account" data-session-show="in" hidden>
+        <a href={auth.membersPath} aria-current={isCurrent(auth.membersPath)}>
+          <Icon name="user" />
+          <span>Voor deelnemers</span>
+        </a>
+        <a href={logoutUrl}>
+          <Icon name="logout" />
+          <span>Uitloggen</span>
+        </a>
+      </div>
     </nav>
   </div>
 </header>
@@ -139,7 +181,42 @@ const isCurrent = (href: string) => (current === href ? "page" : undefined);
     flex: none;
   }
 
+  /* Login state, filled in by src/scripts/session.ts. Desktop only; mobile uses the sheet. */
+  .account {
+    display: none;
+    flex: none;
+  }
+  .account-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 44px;
+    max-width: 14rem;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1.5px solid rgb(251 246 234 / 30%);
+    color: var(--c-cream);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    white-space: nowrap;
+  }
+  .account-link:hover {
+    color: var(--c-cream);
+    background: rgb(251 246 234 / 8%);
+  }
+  .account-link[aria-current="page"] {
+    border-color: var(--c-amber);
+  }
+  .account-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   @media (min-width: 72rem) {
+    .account {
+      display: flex;
+    }
     .bar {
       min-height: 76px;
       padding: 0 var(--gutter);
@@ -200,6 +277,14 @@ const isCurrent = (href: string) => (current === href ? "page" : undefined);
     background: rgb(227 162 26 / 14%);
     color: var(--c-amber);
   }
+  .sheet-account {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid rgb(251 246 234 / 12%);
+  }
   .soon {
     margin-left: auto;
     font-size: 0.75rem;
@@ -209,6 +294,8 @@ const isCurrent = (href: string) => (current === href ? "page" : undefined);
 </style>
 
 <script>
+  import "../scripts/session";
+
   const sheet = document.querySelector<HTMLElement>("[data-menu-sheet]");
   const openButton =
     document.querySelector<HTMLButtonElement>("[data-menu-open]");

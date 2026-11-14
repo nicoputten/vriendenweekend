@@ -1,23 +1,78 @@
 # Example YAML for a Custom App on TrueNAS SCALE (25.10 Goldeye).
 # Apps > Discover Apps > Custom App > "Install via YAML" and paste this in.
-# Replace OWNER with the GitHub owner of this repository, and change the
-# host port if 8088 is already taken.
+#
+# Replace:
+#   OWNER                 GitHub owner of this repository
+#   site.example.com      the public domain of the site
+#   /mnt/POOL/apps/vriendenweekend/auth
+#                         the dataset folder with dex.yaml, oauth2-proxy.yaml and
+#                         allowed-emails.txt (see docs/DEPLOYMENT.md, "Login")
+#   CHANGE_ME values      secrets; generate them as described in docs/DEPLOYMENT.md
+# and change the host port if 8088 is already taken.
+#
+# Without the login (US-004) only the `vriendenweekend` service is needed: the
+# site then hides the login button and serves its public pages as before.
+
+x-auth-env: &auth-env
+  PUBLIC_URL: https://site.example.com
+  # Shared secret between oauth2-proxy and Dex (any long random string).
+  OAUTH2_PROXY_CLIENT_SECRET: CHANGE_ME
+
+x-hardening: &hardening
+  restart: unless-stopped
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+
 services:
   vriendenweekend:
+    <<: *hardening
     image: ghcr.io/OWNER/vriendenweekend:latest
     container_name: vriendenweekend
-    restart: unless-stopped
     ports:
       - "8088:8080"
-    read_only: true
     tmpfs:
       - /tmp
-    security_opt:
-      - no-new-privileges:true
-    cap_drop:
-      - ALL
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/healthz"]
       interval: 30s
       timeout: 3s
       retries: 3
+
+  # Keeps the login session (a signed, encrypted cookie) and checks the allow list.
+  oauth2-proxy:
+    <<: *hardening
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.6
+    command: ["--alpha-config=/config/oauth2-proxy.yaml"]
+    environment:
+      <<: *auth-env
+      # 32 random bytes, base64: openssl rand -base64 32 | tr -- '+/' '-_'
+      OAUTH2_PROXY_COOKIE_SECRET: CHANGE_ME
+      OAUTH2_PROXY_COOKIE_SECURE: "true"
+      # Stay logged in for 30 days.
+      OAUTH2_PROXY_COOKIE_EXPIRE: 720h
+      OAUTH2_PROXY_REDIRECT_URL: https://site.example.com/oauth2/callback
+      OAUTH2_PROXY_REVERSE_PROXY: "true"
+      OAUTH2_PROXY_SKIP_PROVIDER_BUTTON: "true"
+      # One email address per line; edits are picked up without a restart.
+      OAUTH2_PROXY_AUTHENTICATED_EMAILS_FILE: /config/allowed-emails.txt
+    volumes:
+      - /mnt/POOL/apps/vriendenweekend/auth:/config:ro
+
+  # Login broker: sends people to Google or Microsoft and back.
+  dex:
+    <<: *hardening
+    image: dexidp/dex:v2.46.1
+    command: ["dex", "serve", "/config/dex.yaml"]
+    environment:
+      <<: *auth-env
+      GOOGLE_CLIENT_ID: CHANGE_ME.apps.googleusercontent.com
+      GOOGLE_CLIENT_SECRET: CHANGE_ME
+      MICROSOFT_CLIENT_ID: CHANGE_ME
+      MICROSOFT_CLIENT_SECRET: CHANGE_ME
+    tmpfs:
+      - /tmp
+    volumes:
+      - /mnt/POOL/apps/vriendenweekend/auth:/config:ro

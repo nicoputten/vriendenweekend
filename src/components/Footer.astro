@@ -1,6 +1,7 @@
 ---
 import Icon from "./Icon.astro";
 import { event, footer } from "../config/site";
+import { logoutUrl } from "../lib/auth";
 
 const start = new Date(event.start);
 const end = new Date(event.end);
@@ -22,6 +23,13 @@ const range = `${fmt(start, { day: "numeric" })} t/m ${fmt(end, { day: "numeric"
       {range} · {event.region}
     </p>
     <p class="note">{footer.note}</p>
+    <p class="session" data-session-show="in" hidden>
+      Ingelogd als <span data-user-email></span> ·
+      <a href={logoutUrl}>
+        <Icon name="logout" size={16} />
+        Uitloggen
+      </a>
+    </p>
   </div>
 </footer>
 
@@ -49,6 +57,13 @@ const range = `${fmt(start, { day: "numeric" })} t/m ${fmt(end, { day: "numeric"
   }
   .name :global(.logo) {
     color: var(--c-amber);
+  }
+  .session a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    color: var(--c-cream);
   }
   .note {
     color: #a8b8a6;

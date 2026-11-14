@@ -4,6 +4,11 @@ All notable changes. Format: [Keep a Changelog](https://keepachangelog.com/en/1.
 
 ## [Unreleased]
 
+### Added
+
+- Login with Google or Microsoft (US-004): oauth2-proxy and Dex run next to the site, with an allow list of email addresses that lives only on the server. New pages `/inloggen` and the members-only `/leden`; the header shows who is logged in and the footer has a logout link. All information pages stay public.
+- Integration test for the login flow (`tests/auth/run.sh`, also in CI) with the real site image, oauth2-proxy and Dex.
+
 ## [0.2.2] - 2026-11-14
 
 ### Changed

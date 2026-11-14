@@ -186,6 +186,11 @@ img {
   filter: brightness(1.06);
 }
 
+/* Components set their own display; [hidden] must still win (login state toggles). */
+[hidden] {
+  display: none !important;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;

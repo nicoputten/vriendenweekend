@@ -1,0 +1,105 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import PageHero from "../components/PageHero.astro";
+import { membersPage } from "../config/auth";
+import { logoutUrl } from "../lib/auth";
+---
+
+<!--
+  Members-only: Nginx only serves this page with a valid session
+  (see deploy/nginx.conf). It holds no private data itself; private data will
+  come from an API behind the same login.
+-->
+<Base title={membersPage.title}>
+  <PageHero
+    kicker="Alleen voor de groep"
+    title={membersPage.title}
+    intro={membersPage.intro}
+  />
+
+  <div class="container layout">
+    <p class="who card">
+      <Icon name="user" size={20} />
+      <span>
+        Ingelogd als <strong data-user-email>…</strong>
+      </span>
+      <a href={logoutUrl}>Uitloggen</a>
+    </p>
+
+    <ul class="soon">
+      {membersPage.soon.map((item) => (
+        <li class="card">
+          <span class="icon-tile">
+            <Icon name={item.icon} />
+          </span>
+          <div>
+            <h2>{item.title}</h2>
+            <p>{item.text}</p>
+          </div>
+          <span class="badge">Binnenkort</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .layout {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 4px;
+    padding-bottom: 40px;
+  }
+  @media (min-width: 64rem) {
+    .layout {
+      padding-bottom: 88px;
+    }
+  }
+  .who {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    color: var(--c-ink-soft);
+  }
+  .who :global(svg) {
+    color: var(--c-moss);
+  }
+  .who a {
+    margin-left: auto;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 600;
+  }
+  .soon {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 14px;
+  }
+  @media (min-width: 64rem) {
+    .soon {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+  }
+  .soon li {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 18px;
+  }
+  .soon h2 {
+    font-size: 1.1875rem;
+    color: var(--c-forest-800);
+  }
+  .soon p {
+    color: var(--c-ink-soft);
+  }
+</style>
