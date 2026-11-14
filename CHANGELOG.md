@@ -4,6 +4,8 @@ All notable changes. Format: [Keep a Changelog](https://keepachangelog.com/en/1.
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-11-14
+
 ### Changed
 
 - Packing list: "Bedlinnen" instead of bedding or sleeping bag, swimwear is for the sauna or jacuzzi, earplugs and speaker removed, and "Gezelligheid" became "Voor de groep" with a present (beer) for the organisers instead of a beer to share.
