@@ -4,6 +4,10 @@ All notable changes. Format: [Keep a Changelog](https://keepachangelog.com/en/1.
 
 ## [Unreleased]
 
+### Added
+
+- Release workflow can be started from the Actions tab ("Run workflow"); it creates the tag from `package.json`.
+
 ## [0.1.0] - 2026-11-14
 
 ### Added
