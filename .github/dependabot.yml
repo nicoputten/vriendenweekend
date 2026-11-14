@@ -1,17 +1,37 @@
+# All updates are collected into a single weekly pull request.
 version: 2
+
+multi-ecosystem-groups:
+  weekly:
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Amsterdam
+
 updates:
   - package-ecosystem: npm
     directory: /
-    schedule:
-      interval: monthly
-    groups:
-      alles:
-        patterns: ["*"]
+    patterns: ["*"]
+    multi-ecosystem-group: weekly
+    ignore:
+      # Node types must match the Node major we run on (see .nvmrc).
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # TypeScript majors need @astrojs/check support first; bump manually.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+
   - package-ecosystem: github-actions
     directory: /
-    schedule:
-      interval: monthly
+    patterns: ["*"]
+    multi-ecosystem-group: weekly
+
   - package-ecosystem: docker
     directory: /
-    schedule:
-      interval: monthly
+    patterns: ["*"]
+    multi-ecosystem-group: weekly
+    ignore:
+      # Stay on Node LTS; move to the next LTS major manually (with .nvmrc).
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]
