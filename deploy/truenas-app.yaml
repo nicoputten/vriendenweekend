@@ -1,0 +1,23 @@
+# Example YAML for a Custom App on TrueNAS SCALE (25.10 Goldeye).
+# Apps > Discover Apps > Custom App > "Install via YAML" and paste this in.
+# Replace OWNER with the GitHub owner of this repository, and change the
+# host port if 8088 is already taken.
+services:
+  vriendenweekend:
+    image: ghcr.io/OWNER/vriendenweekend:latest
+    container_name: vriendenweekend
+    restart: unless-stopped
+    ports:
+      - "8088:8080"
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/healthz"]
+      interval: 30s
+      timeout: 3s
+      retries: 3

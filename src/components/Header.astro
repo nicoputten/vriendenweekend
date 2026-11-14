@@ -1,0 +1,137 @@
+---
+import { event, nav } from "../config/site";
+
+const current = Astro.url.pathname.replace(/\/$/, "") || "/";
+---
+
+<header class="header">
+  <div class="container bar">
+    <a class="brand" href="/">
+      {event.title}
+    </a>
+    <details class="menu">
+      <summary aria-label="Menu openen">Menu</summary>
+      <nav aria-label="Hoofdmenu">
+        <ul>
+          {nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={current === item.href ? "page" : undefined}
+              >
+                {item.label}
+                {item.status === "binnenkort" && (
+                  <span class="badge">binnenkort</span>
+                )}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<style>
+  .header {
+    background: var(--c-bos);
+    color: var(--c-schuim);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 3.5rem;
+    position: relative;
+  }
+  .brand {
+    color: var(--c-schuim);
+    font-family: var(--font-kop);
+    font-weight: 700;
+    font-size: 1.15rem;
+    text-decoration: none;
+  }
+  summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid rgb(255 255 255 / 30%);
+    border-radius: 999px;
+    font-size: 0.95rem;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  nav {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.25rem);
+    background: var(--c-bos-donker);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 0.5rem;
+    min-width: 15rem;
+    z-index: 5;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  nav a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 0.75rem;
+    color: var(--c-schuim);
+    text-decoration: none;
+    border-radius: 10px;
+  }
+  nav a:hover,
+  nav a[aria-current="page"] {
+    background: rgb(255 255 255 / 10%);
+  }
+  .badge {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--c-varen);
+  }
+
+  @media (min-width: 60rem) {
+    summary {
+      display: none;
+    }
+    .menu nav {
+      position: static;
+      display: block;
+      background: none;
+      box-shadow: none;
+      padding: 0;
+      min-width: 0;
+    }
+    ul {
+      display: flex;
+      gap: 0.25rem;
+    }
+    nav a {
+      padding: 0.5rem 0.65rem;
+      font-size: 0.95rem;
+    }
+    .badge {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // The menu is always open on desktop and collapsible on mobile.
+  const menu = document.querySelector<HTMLDetailsElement>(".menu");
+  const desktop = window.matchMedia("(min-width: 60rem)");
+  const sync = () => {
+    if (menu) menu.open = desktop.matches;
+  };
+  sync();
+  desktop.addEventListener("change", sync);
+</script>

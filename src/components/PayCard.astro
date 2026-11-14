@@ -1,0 +1,76 @@
+---
+import { payment } from "../config/site";
+import { formatEuro, formatLongDate } from "../lib/dates";
+
+const amount = formatEuro(payment.amountEur);
+const deadline = formatLongDate(new Date(payment.deadline));
+const hasLink = payment.url.length > 0;
+---
+
+<section class="pay" aria-labelledby="betalen-titel">
+  <h2 id="betalen-titel">Betaal je bijdrage</h2>
+  <p class="amount">
+    {amount} <span>per persoon</span>
+  </p>
+  <p>
+    Graag vóór <strong>{deadline}</strong>. Daarna regel ik het huisje en de
+    rest.
+  </p>
+  <p class="covers">
+    Hiervan betalen we: {payment.covers.join(", ").toLowerCase()}.
+  </p>
+  {hasLink ? (
+    <a class="button" href={payment.url} target="_blank" rel="noopener">
+      Betaal {amount} via bunq
+    </a>
+  ) : (
+    <p class="button disabled" aria-disabled="true">
+      Betaallink volgt binnenkort
+    </p>
+  )}
+</section>
+
+<style>
+  .pay {
+    background: white;
+    border: 1px solid var(--c-rand);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+  }
+  h2 {
+    margin-top: 0;
+  }
+  .amount {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--c-bos);
+    margin: 0.25rem 0 0.5rem;
+  }
+  .amount span {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--c-tekst-zacht);
+  }
+  .covers {
+    color: var(--c-tekst-zacht);
+  }
+  .button {
+    display: block;
+    text-align: center;
+    margin: 1.25rem 0 0;
+    padding: 0.9rem 1.25rem;
+    border-radius: 999px;
+    background: var(--c-bier);
+    color: var(--c-bos-donker);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .button:hover {
+    filter: brightness(1.05);
+  }
+  .disabled {
+    background: var(--c-rand);
+    color: var(--c-tekst-zacht);
+  }
+</style>
