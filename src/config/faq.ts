@@ -71,9 +71,8 @@ export const faq: readonly FaqGroup[] = [
         id: "carpoolen",
         question: "Kunnen we carpoolen?",
         answer: [
-          "Ja. Zodra het adres bekend is maken we een carpoolindeling. Die komt op de pagina Locatie & reizen.",
+          "Ja, maar dat regel je zelf onderling. Spreek in de groepsapp af wie met wie meerijdt en hoe jullie de reiskosten delen.",
         ],
-        soon: true,
       },
     ],
   },

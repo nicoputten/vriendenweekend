@@ -4,6 +4,10 @@ All notable changes. Format: [Keep a Changelog](https://keepachangelog.com/en/1.
 
 ## [Unreleased]
 
+### Changed
+
+- FAQ: carpooling is arranged among participants themselves, so the answer is final and no longer marked "Binnenkort". The "Locatie & reizen" teaser says the same.
+
 ## [0.2.2] - 2026-11-14
 
 ### Changed
