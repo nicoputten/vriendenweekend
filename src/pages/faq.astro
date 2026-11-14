@@ -1,21 +1,18 @@
 ---
 import Base from "../layouts/Base.astro";
 import Icon from "../components/Icon.astro";
-import Mountains from "../components/Mountains.astro";
+import PageHero from "../components/PageHero.astro";
 import { faq } from "../config/faq";
 
 const firstId = faq[0]?.items[0]?.id;
 ---
 
 <Base title="Vragen">
-  <section class="hero">
-    <div class="container hero-text">
-      <p class="kicker">Veelgestelde vragen</p>
-      <h1>Vragen</h1>
-      <p class="lead">Over betalen, carpoolen, slaapkamers en huisregels.</p>
-    </div>
-    <Mountains />
-  </section>
+  <PageHero
+    kicker="Veelgestelde vragen"
+    title="Vragen"
+    intro="Over betalen, carpoolen, slaapkamers en huisregels."
+  />
 
   <div class="container layout">
     <div class="groups">
@@ -79,51 +76,6 @@ const firstId = faq[0]?.items[0]?.id;
 </script>
 
 <style>
-  .hero {
-    position: relative;
-    background: linear-gradient(
-      180deg,
-      var(--c-forest-900) 0%,
-      var(--c-forest-800) 100%
-    );
-    color: var(--c-cream);
-    overflow: hidden;
-  }
-  .hero-text {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 28px 4px 120px;
-  }
-  .kicker {
-    font-size: 0.8125rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--c-amber-light);
-  }
-  h1 {
-    color: var(--c-cream);
-    font-size: clamp(2.25rem, 5vw, 3.5rem);
-    line-height: 1.08;
-    letter-spacing: -0.01em;
-  }
-  .lead {
-    color: var(--c-on-dark);
-    max-width: 40rem;
-  }
-  @media (min-width: 64rem) {
-    .hero-text {
-      padding: 56px 0 160px;
-      gap: 14px;
-    }
-    .lead {
-      font-size: 1.1875rem;
-    }
-  }
-
   .layout {
     display: flex;
     flex-direction: column;
