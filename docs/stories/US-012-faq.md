@@ -7,7 +7,7 @@ As a **participant** I want **answers to the questions that come up every year**
 
 ## Acceptance criteria
 
-- [x] Questions about carpooling, room allocation, house rules, what the money covers and what happens to leftovers
+- [x] Questions about carpooling, room allocation, house rules, what the money covers and what happens to leftovers (kept for next year)
 - [x] Expandable questions that work without JavaScript (`<details>`/`<summary>`)
 - [x] Questions grouped by topic, as in the approved design (mobile and desktop)
 - [x] Answers that depend on the booked house show a "Binnenkort" label

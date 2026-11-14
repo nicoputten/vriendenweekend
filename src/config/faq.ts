@@ -59,7 +59,7 @@ export const faq: readonly FaqGroup[] = [
         id: "overschot",
         question: "Wat gebeurt er als er geld overblijft?",
         answer: [
-          "Na het weekend maken we de rekening op. Blijft er geld over, dan hoor je in de groepsapp wat we ermee doen.",
+          "Na het weekend maken we de rekening op. Blijft er geld over, dan gaat dat naar de pot voor het vriendenweekend van volgend jaar.",
         ],
       },
     ],
