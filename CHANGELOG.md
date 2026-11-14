@@ -8,6 +8,12 @@ All notable changes. Format: [Keep a Changelog](https://keepachangelog.com/en/1.
 
 - Packing list: "Bedlinnen" instead of bedding or sleeping bag, swimwear is for the sauna or jacuzzi, earplugs and speaker removed, and "Gezelligheid" became "Voor de groep" with a present (beer) for the organisers instead of a beer to share.
 
+## [0.2.1] - 2026-11-14
+
+### Fixed
+
+- The pay button prefills €250 in the bunq.me link.
+
 ## [0.2.0] - 2026-11-14
 
 ### Changed
