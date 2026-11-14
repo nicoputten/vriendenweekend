@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { event, nav, payment } from "../../src/config/site";
+import { event, nav, payment, steps } from "../../src/config/site";
+import { icons } from "../../src/components/icons";
 
 describe("site config", () => {
   it("has departure after arrival", () => {
@@ -20,5 +21,15 @@ describe("site config", () => {
     const hrefs = nav.map((item) => item.href);
     expect(new Set(hrefs).size).toBe(hrefs.length);
     for (const href of hrefs) expect(href.startsWith("/")).toBe(true);
+  });
+
+  it("uses only icons that exist", () => {
+    for (const item of nav) expect(icons).toHaveProperty(item.icon);
+  });
+
+  it("marks exactly one step as current", () => {
+    expect(
+      steps.filter((step) => "current" in step && step.current),
+    ).toHaveLength(1);
   });
 });

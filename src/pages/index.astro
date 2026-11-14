@@ -1,84 +1,363 @@
 ---
 import Base from "../layouts/Base.astro";
 import Countdown from "../components/Countdown.astro";
+import Icon from "../components/Icon.astro";
+import Mountains from "../components/Mountains.astro";
 import PayCard from "../components/PayCard.astro";
-import { event } from "../config/site";
-import { formatDateRange, nights } from "../lib/dates";
+import { event, nav, pot, steps } from "../config/site";
+import { formatDateRangeCompact } from "../lib/dates";
 
 const start = new Date(event.start);
 const end = new Date(event.end);
+const tiles = nav
+  .filter((item) => item.href !== "/")
+  .sort(
+    (a, b) =>
+      Number(a.status === "binnenkort") - Number(b.status === "binnenkort"),
+  );
 ---
 
 <Base>
-  <section class="hero">
-    <div class="container">
-      <p class="kicker">
-        {event.region} · {nights(start, end)} nachten
-      </p>
-      <h1>{event.title}</h1>
-      <p class="dates">{formatDateRange(start, end)}</p>
-      <p class="tagline">{event.tagline}</p>
-      <Countdown target={event.start} label="Nog te gaan" />
+  <div class="top">
+    <div class="hero-bg" aria-hidden="true">
+      <Mountains />
     </div>
-  </section>
+    <div class="intro">
+      <p class="kicker">
+        {event.region} · {formatDateRangeCompact(start, end)}
+      </p>
+      <h1>
+        {event.title} {event.year}
+      </h1>
+      <p class="lead">{event.intro}</p>
+    </div>
+    <div class="timer">
+      <Countdown target={event.start} />
+    </div>
+    <div class="pay-slot">
+      <PayCard />
+    </div>
+  </div>
 
-  <div class="container content">
-    <PayCard />
-    <section>
-      <h2>Hoe het werkt</h2>
+  <div class="container sections">
+    <section class="pot" aria-labelledby="pot-titel">
+      <p class="eyebrow">De pot</p>
+      <h2 class="section-title" id="pot-titel">
+        Waar gaat je €250 naartoe?
+      </h2>
+      <ul class="pot-list">
+        {pot.items.map((item) => (
+          <li class="card pot-item">
+            <span class="icon-tile" data-tone={item.tone}>
+              <Icon name={item.icon} />
+            </span>
+            <div>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <p class="footnote">{pot.footnote}</p>
+    </section>
+
+    <section class="steps" aria-labelledby="planning-titel">
+      <p class="eyebrow">Planning</p>
+      <h2 class="section-title" id="planning-titel">
+        Hoe het werkt
+      </h2>
       <ol>
-        <li>Je betaalt je bijdrage via de bunq-link.</li>
-        <li>Als iedereen betaald heeft, boeken we het huis.</li>
-        <li>
-          Daarna vullen we deze site met het huis, de route en het programma.
-        </li>
+        {steps.map((step, index) => (
+          <li data-current={"current" in step && step.current ? "" : undefined}>
+            <span class="num">{index + 1}</span>
+            <div>
+              <p class="step-title">
+                {step.title}
+                {"current" in step && step.current && (
+                  <span class="now">Nu</span>
+                )}
+              </p>
+              <p class="step-text">{step.text}</p>
+            </div>
+          </li>
+        ))}
       </ol>
+    </section>
+
+    <section class="info" aria-labelledby="info-titel">
+      <p class="eyebrow">Info</p>
+      <h2 class="section-title" id="info-titel">
+        Alles over het weekend
+      </h2>
+      <ul class="tiles">
+        {tiles.map((item) => (
+          <li>
+            <a class="card tile" href={item.href}>
+              <span
+                class="icon-tile"
+                data-tone={item.href === "/programma" ? "amber" : undefined}
+              >
+                <Icon name={item.icon} />
+              </span>
+              <span class="tile-text">
+                <span class="tile-title">{item.label}</span>
+                {item.status === "binnenkort" ? (
+                  <span class="badge">Binnenkort</span>
+                ) : (
+                  <Icon
+                    name="arrowRight"
+                    size={18}
+                    strokeWidth={2}
+                    class="arrow"
+                  />
+                )}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </section>
   </div>
 </Base>
 
 <style>
-  .hero {
+  /* Top area: dark hero with intro, countdown and pay card.
+     Mobile: stacked, countdown and pay card below the hero.
+     Desktop: two columns inside the hero. */
+  .top {
+    --side: var(--gutter);
+    display: grid;
+    grid-template-columns: var(--side) minmax(0, 1fr) var(--side);
+    position: relative;
+  }
+  .hero-bg {
+    grid-area: 1 / 1 / 2 / -1;
+    position: relative;
     background: linear-gradient(
       180deg,
-      var(--c-bos) 0%,
-      var(--c-bos-donker) 100%
+      var(--c-forest-900) 0%,
+      var(--c-forest-800) 100%
     );
-    color: var(--c-schuim);
-    padding-block: 3rem 2.5rem;
-    text-align: center;
+    overflow: hidden;
+  }
+  .intro {
+    grid-area: 1 / 2 / 2 / 3;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 28px 4px 120px;
+    color: var(--c-cream);
   }
   .kicker {
-    margin: 0;
-    color: var(--c-varen);
-    text-transform: uppercase;
+    font-size: 0.8125rem;
+    font-weight: 600;
     letter-spacing: 0.08em;
-    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: var(--c-amber-light);
   }
   h1 {
-    color: var(--c-schuim);
-    font-size: clamp(2.2rem, 8vw, 3.5rem);
-    margin: 0.25rem 0;
+    color: var(--c-cream);
+    font-size: clamp(2.25rem, 6vw, 4.25rem);
+    line-height: 1.06;
+    letter-spacing: -0.015em;
   }
-  .dates {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--c-bier);
-    margin: 0;
+  .lead {
+    color: var(--c-on-dark);
+    max-width: 40rem;
   }
-  .tagline {
-    margin: 0.75rem auto 1.75rem;
-    max-width: 30rem;
+  .timer {
+    grid-area: 2 / 2 / 3 / 3;
+    margin-top: -6px;
+    position: relative;
   }
-  .content {
+  .pay-slot {
+    grid-area: 3 / 2 / 4 / 3;
+    padding-top: 28px;
+  }
+
+  @media (min-width: 64rem) {
+    .top {
+      --side: max(var(--gutter), (100% - var(--max)) / 2);
+      grid-template-columns: var(--side) minmax(0, 7fr) minmax(0, 5fr) var(
+          --side
+        );
+      column-gap: 0;
+    }
+    .hero-bg {
+      grid-area: 1 / 1 / 3 / -1;
+    }
+    .intro {
+      grid-area: 1 / 2 / 2 / 3;
+      gap: 16px;
+      padding: 64px 64px 0 0;
+    }
+    .kicker {
+      font-size: 0.875rem;
+    }
+    .lead {
+      font-size: 1.25rem;
+      line-height: 1.5;
+    }
+    .timer {
+      grid-area: 2 / 2 / 3 / 3;
+      margin: 34px 64px 170px 0;
+    }
+    .pay-slot {
+      grid-area: 1 / 3 / 3 / 4;
+      padding: 64px 0 170px;
+      position: relative;
+    }
+  }
+
+  .sections {
     display: grid;
-    gap: 2rem;
-    margin-top: -1.25rem;
+    gap: 36px;
+    padding-top: 36px;
+  }
+  @media (min-width: 64rem) {
+    .sections {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: 56px 64px;
+      padding-top: 8px;
+    }
+    .info {
+      grid-column: 1 / -1;
+    }
+  }
+
+  section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .eyebrow + .section-title {
+    margin-top: -12px;
+  }
+
+  .pot-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .pot-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 16px;
+  }
+  .pot-item h3 {
+    font-family: var(--font);
+    font-size: 1rem;
+    color: var(--c-ink);
+  }
+  .pot-item p,
+  .step-text {
+    color: var(--c-ink-soft);
+    font-size: 0.9375rem;
+  }
+  .footnote {
+    font-size: 0.875rem;
+    color: var(--c-ink-soft);
+  }
+
+  .steps ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .steps li {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    column-gap: 14px;
+    position: relative;
+    padding-bottom: 18px;
+  }
+  .steps li:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    left: 15px;
+    top: 32px;
+    bottom: 0;
+    width: 2px;
+    background: var(--c-line);
+  }
+  .num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--c-line);
+    color: var(--c-ink-soft);
+    font-weight: 700;
+    font-size: 0.9375rem;
+  }
+  li[data-current] .num {
+    border-color: var(--c-amber);
+    background: var(--c-amber);
+    color: var(--c-forest-900);
+  }
+  .steps li > div {
+    padding-top: 4px;
+  }
+  .step-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+  }
+  .now {
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--c-forest-800);
+    color: var(--c-cream);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .tiles {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
   }
   @media (min-width: 48rem) {
-    .content {
-      grid-template-columns: 1fr 1fr;
-      align-items: start;
+    .tiles {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
     }
+  }
+  .tile {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    height: 100%;
+    min-height: 118px;
+    padding: 16px;
+    text-decoration: none;
+    color: var(--c-ink);
+  }
+  .tile:hover {
+    color: var(--c-ink);
+    border-color: var(--c-fern);
+  }
+  .tile-text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+  }
+  .tile-title {
+    font-weight: 700;
+  }
+  .tile :global(.arrow) {
+    color: var(--c-moss);
   }
 </style>

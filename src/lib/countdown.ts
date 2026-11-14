@@ -22,3 +22,11 @@ export function countdown(target: Date, now: Date = new Date()): Countdown {
     done: false,
   };
 }
+
+/** Whole days left until `target`, rounded up, never negative ("nog 16 dagen"). */
+export function daysLeft(target: Date, now: Date = new Date()): number {
+  return Math.max(
+    0,
+    Math.ceil((target.getTime() - now.getTime()) / 86_400_000),
+  );
+}

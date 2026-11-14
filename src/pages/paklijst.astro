@@ -5,7 +5,30 @@ import ComingSoon from "../components/ComingSoon.astro";
 
 <Base title="Paklijst">
   <ComingSoon
+    kicker="Niets vergeten"
     title="Paklijst"
-    intro="Hier komt een lijst met wat je mee moet nemen, van slaapzak tot bordspel."
+    intro="Een lijst om af te vinken, zodat je niet zonder slaapzak in de Ardennen staat."
+    items={[
+      {
+        icon: "bed",
+        title: "Slapen",
+        text: "Beddengoed, kussen en oordoppen.",
+      },
+      {
+        icon: "bag",
+        title: "Kleding",
+        text: "Voor binnen, buiten en een regenbui.",
+      },
+      {
+        icon: "dice",
+        title: "Spellen",
+        text: "Neem je favoriete bordspel mee.",
+      },
+      {
+        icon: "list",
+        title: "Afvinken",
+        text: "Je vinkjes worden onthouden op je telefoon.",
+      },
+    ]}
   />
 </Base>

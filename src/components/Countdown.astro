@@ -1,31 +1,40 @@
 ---
+import Icon from "./Icon.astro";
 import { countdown } from "../lib/countdown";
+import { formatLongDate } from "../lib/dates";
 
 interface Props {
   target: string;
-  label: string;
 }
 
-const { target, label } = Astro.props;
+const { target } = Astro.props;
 // Value at build time, so the page shows something sensible without JavaScript.
 const initial = countdown(new Date(target));
+const pad = (n: number) => String(n).padStart(2, "0");
 const units = [
-  ["days", "dagen"],
-  ["hours", "uur"],
-  ["minutes", "min"],
-  ["seconds", "sec"],
+  { key: "days", name: "dagen", value: String(initial.days) },
+  { key: "hours", name: "uur", value: pad(initial.hours) },
+  { key: "minutes", name: "min", value: pad(initial.minutes) },
+  { key: "seconds", name: "sec", value: pad(initial.seconds) },
 ] as const;
 ---
 
-<section class="countdown" data-target={target} aria-label={label}>
-  <p class="label">{label}</p>
-  <ol>
-    {units.map(([key, name]) => (
+<section
+  class="countdown"
+  data-target={target}
+  aria-labelledby="countdown-label"
+>
+  <p class="label" id="countdown-label">
+    <Icon name="clock" size={18} />
+    Nog even geduld tot {formatLongDate(new Date(target))}
+  </p>
+  <ol role="timer" aria-live="off">
+    {units.map((unit) => (
       <li>
-        <span class="value" data-unit={key}>
-          {initial[key]}
+        <span class="value" data-unit={unit.key}>
+          {unit.value}
         </span>
-        <span class="unit">{name}</span>
+        <span class="unit">{unit.name}</span>
       </li>
     ))}
   </ol>
@@ -33,47 +42,90 @@ const units = [
 
 <style>
   .countdown {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px 16px;
+    background: #fff;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
   }
   .label {
-    margin: 0 0 0.5rem;
-    color: var(--c-varen);
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--c-ink-soft);
+    font-size: 0.875rem;
+    font-weight: 600;
   }
   ol {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.5rem;
-    max-width: 24rem;
-    margin-inline: auto;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
   }
   li {
-    background: rgb(255 255 255 / 8%);
-    border-radius: 10px;
-    padding: 0.6rem 0.25rem;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+    border-radius: 12px;
+    background: var(--c-forest-800);
+    color: var(--c-cream);
   }
   .value {
-    font-size: 1.75rem;
+    font-family: var(--font-display);
     font-weight: 700;
+    font-size: 1.75rem;
+    line-height: 1.1;
     font-variant-numeric: tabular-nums;
-    color: var(--c-schuim);
   }
   .unit {
     font-size: 0.75rem;
-    color: var(--c-varen);
+    color: var(--c-fern);
+  }
+
+  /* On desktop the countdown sits inside the dark hero. */
+  @media (min-width: 64rem) {
+    .countdown {
+      padding: 0;
+      background: none;
+      border: 0;
+      box-shadow: none;
+      gap: 10px;
+    }
+    .label {
+      color: var(--c-on-dark-soft);
+      font-size: 0.9375rem;
+    }
+    ol {
+      display: flex;
+      gap: 12px;
+    }
+    li {
+      min-width: 96px;
+      padding: 14px 0;
+      border-radius: 14px;
+      background: rgb(251 246 234 / 8%);
+      border: 1px solid rgb(251 246 234 / 14%);
+    }
+    .value {
+      font-size: 2.5rem;
+      line-height: 1.05;
+    }
+    .unit {
+      font-size: 0.8125rem;
+    }
   }
 </style>
 
 <script>
   import { countdown } from "../lib/countdown";
 
+  const pad = (n: number) => String(n).padStart(2, "0");
   for (const el of document.querySelectorAll<HTMLElement>(
     ".countdown[data-target]",
   )) {
@@ -81,9 +133,10 @@ const units = [
     const tick = () => {
       const parts = countdown(target);
       for (const span of el.querySelectorAll<HTMLElement>("[data-unit]")) {
-        span.textContent = String(
-          parts[span.dataset.unit as keyof typeof parts],
-        );
+        const key = span.dataset.unit as
+          "days" | "hours" | "minutes" | "seconds";
+        span.textContent =
+          key === "days" ? String(parts.days) : pad(parts[key]);
       }
       return parts.done;
     };

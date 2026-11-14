@@ -9,8 +9,9 @@ interface Props {
   description?: string;
 }
 
-const { title, description = event.tagline } = Astro.props;
-const fullTitle = title ? `${title} · ${event.title}` : event.title;
+const siteTitle = `${event.title} ${event.year}`;
+const { title, description = event.intro } = Astro.props;
+const fullTitle = title ? `${title} · ${siteTitle}` : siteTitle;
 ---
 
 <!doctype html>
@@ -19,7 +20,7 @@ const fullTitle = title ? `${title} · ${event.title}` : event.title;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#1f3d2b" />
+    <meta name="theme-color" content="#142a1d" />
     <meta name="robots" content="noindex, nofollow" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
@@ -43,12 +44,13 @@ const fullTitle = title ? `${title} · ${event.title}` : event.title;
   .skip {
     position: absolute;
     left: 1rem;
-    top: -3rem;
-    background: var(--c-bier);
-    color: var(--c-bos-donker);
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius);
-    z-index: 10;
+    top: -4rem;
+    background: var(--c-amber);
+    color: var(--c-forest-900);
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    z-index: 50;
   }
   .skip:focus {
     top: 1rem;

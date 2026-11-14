@@ -6,6 +6,7 @@
 - **One config file.** Everything that changes per edition (dates, amount, deadline, payment link, menu) lives in `src/config/site.ts`. Pages read from it, so a new edition is mostly a config change.
 - **English code, Dutch content.** Code, comments, tests, docs and commits are in English. Only user-facing text on the site is in Dutch.
 - **No private data in the repo.** The repository is public: no real names of participants or organisers, no private domain names, addresses or secrets. Environment-specific values (domain, host IPs) live only on the server.
+- **Design.** The approved design lives in a separate design canvas. Colours are CSS custom properties in `src/styles/global.css`; icons are inline stroke SVGs in `src/components/icons.ts`, rendered with `Icon.astro`. Fonts (Fraunces for headings, Inter for body text) are self-hosted through Fontsource npm packages.
 - **No external resources.** No Google Fonts, analytics or embeds. That keeps the site fast and privacy-friendly, and allows a strict Content-Security-Policy.
 - **Nginx in a container.** The Docker image contains the built site and its own Nginx (unprivileged, port 8080). TLS and the domain are handled by the existing reverse proxy on the TrueNAS host.
 - **Later: login and a small API.** Login (US-004) will be oauth2-proxy in front of the site, without changing the static site. Features that need storage (US-005, US-006) get a separate API container with SQLite.

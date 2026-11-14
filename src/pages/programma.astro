@@ -5,7 +5,21 @@ import ComingSoon from "../components/ComingSoon.astro";
 
 <Base title="Programma">
   <ComingSoon
+    kicker="Vrijdag t/m maandag"
     title="Programma"
-    intro="Hier komt het programma per dag, en kun je je opgeven om een avond te koken."
+    intro="Een los programma per dag, met kookavonden en de Vriendenweekend Quiz."
+    items={[
+      {
+        icon: "calendar",
+        title: "Per dag",
+        text: "Wat er op vrijdag, zaterdag, zondag en maandag gebeurt.",
+      },
+      { icon: "food", title: "Kookavonden", text: "Wie op welke avond kookt." },
+      {
+        icon: "dice",
+        title: "Spellen en de quiz",
+        text: "Bordspellen, buitenspellen en de quiz.",
+      },
+    ]}
   />
 </Base>
