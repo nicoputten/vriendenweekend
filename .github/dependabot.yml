@@ -8,13 +8,14 @@ multi-ecosystem-groups:
       day: monday
       time: "06:00"
       timezone: Europe/Amsterdam
+    # With multi-ecosystem groups, target-branch is only allowed on the group.
+    target-branch: develop
 
 updates:
   - package-ecosystem: npm
     directory: /
     patterns: ["*"]
     multi-ecosystem-group: weekly
-    target-branch: develop
     ignore:
       # Node types must match the Node major we run on (see .nvmrc).
       - dependency-name: "@types/node"
@@ -27,13 +28,11 @@ updates:
     directory: /
     patterns: ["*"]
     multi-ecosystem-group: weekly
-    target-branch: develop
 
   - package-ecosystem: docker
     directory: /
     patterns: ["*"]
     multi-ecosystem-group: weekly
-    target-branch: develop
     ignore:
       # Stay on Node LTS; move to the next LTS major manually (with .nvmrc).
       - dependency-name: node
