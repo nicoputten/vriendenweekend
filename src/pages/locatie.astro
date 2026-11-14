@@ -1,11 +1,35 @@
 ---
 import Base from "../layouts/Base.astro";
 import ComingSoon from "../components/ComingSoon.astro";
+import { event } from "../config/site";
 ---
 
 <Base title="Locatie & reizen">
   <ComingSoon
+    kicker={event.region}
     title="Locatie & reizen"
-    intro="Hier komen het adres, de route en afspraken over carpoolen."
+    intro="Waar we precies zitten weten we pas als het chateau geboekt is. Dan komt hier alles over de reis."
+    items={[
+      {
+        icon: "pin",
+        title: "Adres",
+        text: "Waar het chateau ligt, met een link naar de kaart.",
+      },
+      {
+        icon: "map",
+        title: "Route en reistijd",
+        text: "Hoe lang je onderweg bent en waar je op moet letten.",
+      },
+      {
+        icon: "car",
+        title: "Carpoolen",
+        text: "Wie rijdt, wie meerijdt en hoe laat we vertrekken.",
+      },
+      {
+        icon: "clock",
+        title: "Aankomst",
+        text: "Vanaf hoe laat je welkom bent op vrijdag.",
+      },
+    ]}
   />
 </Base>

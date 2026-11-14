@@ -58,3 +58,20 @@ export function formatEuro(amount: number): string {
     minimumFractionDigits: Number.isInteger(amount) ? 0 : 2,
   }).format(amount);
 }
+
+const dayMonthYear = new Intl.DateTimeFormat("nl-NL", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: TIME_ZONE,
+});
+
+/** "30 november 2026" */
+export function formatDate(date: Date): string {
+  return dayMonthYear.format(date);
+}
+
+/** "13–16 augustus 2027" (no spaces around the dash, for compact labels). */
+export function formatDateRangeCompact(start: Date, end: Date): string {
+  return formatDateRange(start, end).replace(" – ", "–");
+}

@@ -1,137 +1,234 @@
 ---
-import { event, nav } from "../config/site";
+import Brand from "./Brand.astro";
+import Icon from "./Icon.astro";
+import { nav } from "../config/site";
 
-const current = Astro.url.pathname.replace(/\/$/, "") || "/";
+const current =
+  Astro.url.pathname.replace(/\.html$/, "").replace(/\/(index)?$/, "") || "/";
+const isCurrent = (href: string) => (current === href ? "page" : undefined);
 ---
 
 <header class="header">
-  <div class="container bar">
-    <a class="brand" href="/">
-      {event.title}
-    </a>
-    <details class="menu">
-      <summary aria-label="Menu openen">Menu</summary>
-      <nav aria-label="Hoofdmenu">
-        <ul>
-          {nav.map((item) => (
-            <li>
-              <a
-                href={item.href}
-                aria-current={current === item.href ? "page" : undefined}
-              >
-                {item.label}
-                {item.status === "binnenkort" && (
-                  <span class="badge">binnenkort</span>
-                )}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </details>
+  <div class="bar">
+    <Brand />
+
+    <nav class="pill-nav" aria-label="Hoofdmenu">
+      {nav.map((item) => (
+        <a
+          href={item.href}
+          aria-current={isCurrent(item.href)}
+          data-status={item.status}
+        >
+          {item.label}
+          {item.status === "binnenkort" && (
+            <>
+              <span class="dot" aria-hidden="true" />
+              <span class="visually-hidden"> (binnenkort)</span>
+            </>
+          )}
+        </a>
+      ))}
+    </nav>
+
+    <button
+      class="burger"
+      type="button"
+      aria-label="Menu openen"
+      aria-expanded="false"
+      aria-controls="menu-sheet"
+      data-menu-open
+    >
+      <Icon name="menu" size={24} />
+    </button>
+  </div>
+
+  <div class="sheet-backdrop" id="menu-sheet" hidden data-menu-sheet>
+    <nav class="sheet" aria-label="Hoofdmenu (mobiel)">
+      <div class="sheet-head">
+        <span class="sheet-title">Menu</span>
+        <button
+          class="burger"
+          type="button"
+          aria-label="Menu sluiten"
+          data-menu-close
+        >
+          <Icon name="close" size={24} />
+        </button>
+      </div>
+      {nav.map((item) => (
+        <a href={item.href} aria-current={isCurrent(item.href)}>
+          <Icon name={item.icon} />
+          <span>{item.menuLabel ?? item.label}</span>
+          {item.status === "binnenkort" && <span class="soon">Binnenkort</span>}
+        </a>
+      ))}
+    </nav>
   </div>
 </header>
 
 <style>
   .header {
-    background: var(--c-bos);
-    color: var(--c-schuim);
+    background: var(--c-forest-900);
+    color: var(--c-cream);
+    position: relative;
+    z-index: 20;
   }
   .bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 3.5rem;
-    position: relative;
+    gap: 24px;
+    min-height: 64px;
+    padding: 0 12px 0 16px;
+    width: min(100%, calc(var(--max) + 2 * var(--gutter)));
+    margin-inline: auto;
   }
-  .brand {
-    color: var(--c-schuim);
-    font-family: var(--font-kop);
-    font-weight: 700;
-    font-size: 1.15rem;
-    text-decoration: none;
-  }
-  summary {
-    cursor: pointer;
-    list-style: none;
-    padding: 0.5rem 0.9rem;
-    border: 1px solid rgb(255 255 255 / 30%);
-    border-radius: 999px;
-    font-size: 0.95rem;
-  }
-  summary::-webkit-details-marker {
-    display: none;
-  }
-  nav {
-    position: absolute;
-    right: 0;
-    top: calc(100% + 0.25rem);
-    background: var(--c-bos-donker);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 0.5rem;
-    min-width: 15rem;
-    z-index: 5;
-  }
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  nav a {
+  .burger {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.65rem 0.75rem;
-    color: var(--c-schuim);
-    text-decoration: none;
-    border-radius: 10px;
-  }
-  nav a:hover,
-  nav a[aria-current="page"] {
-    background: rgb(255 255 255 / 10%);
-  }
-  .badge {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--c-varen);
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 12px;
+    background: rgb(251 246 234 / 8%);
+    color: var(--c-cream);
+    cursor: pointer;
   }
 
-  @media (min-width: 60rem) {
-    summary {
-      display: none;
+  /* Desktop: one rounded pill with all pages. */
+  .pill-nav {
+    display: none;
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
+    border-radius: 999px;
+    background: rgb(251 246 234 / 6%);
+    border: 1px solid rgb(251 246 234 / 10%);
+  }
+  .pill-nav a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 999px;
+    white-space: nowrap;
+    text-decoration: none;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--c-cream);
+  }
+  .pill-nav a[data-status="binnenkort"] {
+    color: #c9d6c5;
+  }
+  .pill-nav a:hover {
+    background: rgb(251 246 234 / 8%);
+  }
+  .pill-nav a[aria-current="page"] {
+    background: var(--c-amber);
+    color: var(--c-forest-900);
+    font-weight: 700;
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--c-amber);
+    flex: none;
+  }
+
+  @media (min-width: 72rem) {
+    .bar {
+      min-height: 76px;
+      padding: 0 var(--gutter);
     }
-    .menu nav {
-      position: static;
-      display: block;
-      background: none;
-      box-shadow: none;
-      padding: 0;
-      min-width: 0;
-    }
-    ul {
+    .pill-nav {
       display: flex;
-      gap: 0.25rem;
     }
-    nav a {
-      padding: 0.5rem 0.65rem;
-      font-size: 0.95rem;
-    }
-    .badge {
+    .bar > .burger {
       display: none;
     }
+  }
+
+  /* Mobile: dark sheet that drops down over the page. */
+  .sheet-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgb(10 22 14 / 55%);
+    z-index: 30;
+    overflow-y: auto;
+  }
+  .sheet-backdrop[hidden] {
+    display: none;
+  }
+  .sheet {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 12px 20px;
+    background: var(--c-forest-900);
+    border-radius: 0 0 22px 22px;
+    box-shadow: 0 18px 40px rgb(0 0 0 / 35%);
+  }
+  .sheet-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 52px;
+    padding: 0 0 4px 6px;
+  }
+  .sheet-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.125rem;
+  }
+  .sheet a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 52px;
+    padding: 0 14px;
+    border-radius: 12px;
+    color: var(--c-cream);
+    text-decoration: none;
+    font-size: 1.0625rem;
+    font-weight: 500;
+  }
+  .sheet a[aria-current="page"] {
+    background: rgb(227 162 26 / 14%);
+    color: var(--c-amber);
+  }
+  .soon {
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--c-amber-light);
   }
 </style>
 
 <script>
-  // The menu is always open on desktop and collapsible on mobile.
-  const menu = document.querySelector<HTMLDetailsElement>(".menu");
-  const desktop = window.matchMedia("(min-width: 60rem)");
-  const sync = () => {
-    if (menu) menu.open = desktop.matches;
+  const sheet = document.querySelector<HTMLElement>("[data-menu-sheet]");
+  const openButton =
+    document.querySelector<HTMLButtonElement>("[data-menu-open]");
+  const closeButton =
+    document.querySelector<HTMLButtonElement>("[data-menu-close]");
+
+  const setOpen = (open: boolean) => {
+    if (!sheet || !openButton) return;
+    sheet.hidden = !open;
+    openButton.setAttribute("aria-expanded", String(open));
+    document.body.style.overflow = open ? "hidden" : "";
+    (open ? closeButton : openButton)?.focus();
   };
-  sync();
-  desktop.addEventListener("change", sync);
+
+  openButton?.addEventListener("click", () => setOpen(true));
+  closeButton?.addEventListener("click", () => setOpen(false));
+  sheet?.addEventListener("click", (event) => {
+    if (event.target === sheet) setOpen(false);
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && sheet && !sheet.hidden) setOpen(false);
+  });
 </script>

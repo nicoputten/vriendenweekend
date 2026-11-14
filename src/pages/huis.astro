@@ -1,11 +1,37 @@
 ---
 import Base from "../layouts/Base.astro";
 import ComingSoon from "../components/ComingSoon.astro";
+import { event } from "../config/site";
 ---
 
-<Base title="Het huis">
+<Base title="Het chateau">
   <ComingSoon
-    title="Het huis"
-    intro="Zodra het huis geboekt is, vind je hier foto's, de indeling en de slaapkamers."
+    kicker={event.bookingVia}
+    title="Het chateau"
+    intro={`Het chateau is nog niet geboekt. Zodra de pot vol is zoeken we er een uit voor ${event.groupSize} man.`}
+    photos
+    items={[
+      { icon: "camera", title: "Foto's", text: "Binnen, buiten en de tuin." },
+      {
+        icon: "bed",
+        title: "Kamers en bedden",
+        text: "Met de slaapkamerverdeling.",
+      },
+      {
+        icon: "dice",
+        title: "Faciliteiten",
+        text: "Keuken, speltafel, eventueel sauna of zwembad.",
+      },
+      {
+        icon: "clock",
+        title: "Aankomst en vertrek",
+        text: "Check-in- en check-outtijden.",
+      },
+      {
+        icon: "rules",
+        title: "Huisregels",
+        text: "Van de verhuurder en van ons.",
+      },
+    ]}
   />
 </Base>

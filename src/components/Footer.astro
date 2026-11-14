@@ -1,24 +1,56 @@
 ---
-import { event } from "../config/site";
+import Icon from "./Icon.astro";
+import { event, footer } from "../config/site";
+
+const start = new Date(event.start);
+const end = new Date(event.end);
+const fmt = (d: Date, opts: Intl.DateTimeFormatOptions) =>
+  new Intl.DateTimeFormat("nl-NL", {
+    timeZone: "Europe/Brussels",
+    ...opts,
+  }).format(d);
+const range = `${fmt(start, { day: "numeric" })} t/m ${fmt(end, { day: "numeric", month: "long", year: "numeric" })}`;
 ---
 
 <footer class="footer">
   <div class="container">
-    <p>
-      {event.title} · {event.region}
+    <p class="name">
+      <Icon name="logo" size={18} strokeWidth={2} class="logo" />
+      {event.title} {event.year}
     </p>
+    <p>
+      {range} · {event.region}
+    </p>
+    <p class="note">{footer.note}</p>
   </div>
 </footer>
 
 <style>
   .footer {
-    margin-top: 4rem;
-    padding-block: 1.5rem;
-    background: var(--c-bos-donker);
-    color: var(--c-varen);
-    font-size: 0.9rem;
+    margin-top: 3rem;
+    padding: 28px 0 32px;
+    background: var(--c-forest-900);
+    color: var(--c-on-dark-soft);
+    font-size: 0.875rem;
   }
-  p {
-    margin: 0;
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--c-cream);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .name :global(.logo) {
+    color: var(--c-amber);
+  }
+  .note {
+    color: #a8b8a6;
   }
 </style>

@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  formatDate,
   formatDateRange,
+  formatDateRangeCompact,
   formatEuro,
   formatLongDate,
   nights,
@@ -52,5 +54,24 @@ describe("formatEuro", () => {
 
   it("shows cents for a fractional amount", () => {
     expect(formatEuro(12.5).replace(/\s/g, " ")).toBe("€ 12,50");
+  });
+});
+
+describe("formatDate", () => {
+  it("gives day, month and year in Dutch", () => {
+    expect(formatDate(new Date("2026-11-30T23:59:59+01:00"))).toBe(
+      "30 november 2026",
+    );
+  });
+});
+
+describe("formatDateRangeCompact", () => {
+  it("drops the spaces around the dash", () => {
+    expect(
+      formatDateRangeCompact(
+        new Date("2027-08-13T16:00:00+02:00"),
+        new Date("2027-08-16T11:00:00+02:00"),
+      ),
+    ).toBe("13–16 augustus 2027");
   });
 });

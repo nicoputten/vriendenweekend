@@ -1,0 +1,57 @@
+---
+import Icon from "./Icon.astro";
+import { event } from "../config/site";
+---
+
+<a class="brand" href="/">
+  <span class="mark">
+    <Icon name="logo" size={22} strokeWidth={2} />
+  </span>
+  <span class="name">
+    {event.title} <span class="year">{event.year}</span>
+  </span>
+</a>
+
+<style>
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--c-cream);
+    text-decoration: none;
+    white-space: nowrap;
+    flex: none;
+  }
+  .brand:hover {
+    color: var(--c-cream);
+  }
+  .mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--c-amber);
+    color: var(--c-forest-900);
+  }
+  .name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.125rem;
+    letter-spacing: -0.01em;
+  }
+  .year {
+    color: var(--c-amber);
+  }
+  @media (min-width: 72rem) {
+    .mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+    }
+    .name {
+      font-size: 1.1875rem;
+    }
+  }
+</style>

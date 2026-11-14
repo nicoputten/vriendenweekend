@@ -1,76 +1,183 @@
 ---
+import Icon from "./Icon.astro";
 import { payment } from "../config/site";
-import { formatEuro, formatLongDate } from "../lib/dates";
+import { daysLeft } from "../lib/countdown";
+import { formatDate, formatEuro } from "../lib/dates";
 
-const amount = formatEuro(payment.amountEur);
-const deadline = formatLongDate(new Date(payment.deadline));
+const amount = formatEuro(payment.amountEur).replace(/\s/g, "");
+const deadline = new Date(payment.deadline);
 const hasLink = payment.url.length > 0;
 ---
 
-<section class="pay" aria-labelledby="betalen-titel">
-  <h2 id="betalen-titel">Betaal je bijdrage</h2>
-  <p class="amount">
-    {amount} <span>per persoon</span>
-  </p>
-  <p>
-    Graag vóór <strong>{deadline}</strong>. Daarna regel ik het huisje en de
-    rest.
-  </p>
-  <p class="covers">
-    Hiervan betalen we: {payment.covers.join(", ").toLowerCase()}.
-  </p>
+<section class="pay" id="betalen" aria-labelledby="betalen-titel">
+  <div class="head">
+    <h2 id="betalen-titel">Doe mee</h2>
+    <p class="amount">
+      {amount}
+      <span> p.p.</span>
+    </p>
+  </div>
+  <p class="summary">{payment.summary}</p>
+  <div class="deadline">
+    <Icon name="calendar" size={22} class="deadline-icon" />
+    <p>
+      <strong>Uiterlijk {formatDate(deadline)}</strong>
+      <span>
+        nog <span data-days-left={payment.deadline}>{daysLeft(deadline)}</span>{" "}
+        dagen
+      </span>
+    </p>
+  </div>
   {hasLink ? (
     <a class="button" href={payment.url} target="_blank" rel="noopener">
       Betaal {amount} via bunq
+      <Icon name="external" size={20} strokeWidth={2} />
     </a>
   ) : (
     <p class="button disabled" aria-disabled="true">
       Betaallink volgt binnenkort
     </p>
   )}
+  <ul class="tips">
+    {payment.tips.map((tip) => (
+      <li>
+        <Icon name="check" size={18} strokeWidth={2.2} class="tick" />
+        <span>{tip}</span>
+      </li>
+    ))}
+  </ul>
 </section>
 
 <style>
   .pay {
-    background: white;
-    border: 1px solid var(--c-rand);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 22px 20px 20px;
+    border-radius: 20px;
+    background: var(--c-forest-900);
+    color: var(--c-cream);
+    box-shadow: 0 10px 30px rgb(20 42 29 / 25%);
+    scroll-margin-top: 1rem;
+  }
+  .head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
   }
   h2 {
-    margin-top: 0;
+    color: inherit;
+    font-size: 1.625rem;
   }
   .amount {
-    font-size: 2.5rem;
+    font-family: var(--font-display);
     font-weight: 700;
-    color: var(--c-bos);
-    margin: 0.25rem 0 0.5rem;
+    font-size: 2.125rem;
+    line-height: 1;
+    color: var(--c-amber);
   }
   .amount span {
-    font-size: 1rem;
-    font-weight: 400;
-    color: var(--c-tekst-zacht);
+    font-family: var(--font);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--c-on-dark-soft);
   }
-  .covers {
-    color: var(--c-tekst-zacht);
+  .summary {
+    color: var(--c-on-dark);
   }
-  .button {
-    display: block;
-    text-align: center;
-    margin: 1.25rem 0 0;
-    padding: 0.9rem 1.25rem;
-    border-radius: 999px;
-    background: var(--c-bier);
-    color: var(--c-bos-donker);
-    font-weight: 700;
-    text-decoration: none;
+  .deadline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgb(251 246 234 / 7%);
+    border: 1px solid rgb(251 246 234 / 14%);
   }
-  .button:hover {
-    filter: brightness(1.05);
+  .deadline :global(.deadline-icon) {
+    color: var(--c-amber);
+    flex: none;
+  }
+  .deadline p {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+  }
+  .deadline strong {
+    font-weight: 600;
+  }
+  .deadline p > span {
+    font-size: 0.875rem;
+    color: var(--c-on-dark-soft);
   }
   .disabled {
-    background: var(--c-rand);
-    color: var(--c-tekst-zacht);
+    background: rgb(251 246 234 / 14%);
+    color: var(--c-on-dark-soft);
+  }
+  .tips {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.875rem;
+    color: var(--c-on-dark);
+  }
+  .tips li {
+    display: flex;
+    gap: 8px;
+  }
+  .tips :global(.tick) {
+    color: var(--c-fern);
+    flex: none;
+    margin-top: 1px;
+  }
+
+  /* On desktop the card is light and floats in the dark hero. */
+  @media (min-width: 64rem) {
+    .pay {
+      gap: 16px;
+      padding: 28px;
+      border-radius: var(--radius-lg);
+      background: var(--c-cream);
+      color: var(--c-ink);
+      box-shadow: var(--shadow-lg);
+    }
+    h2 {
+      color: var(--c-forest-800);
+      font-size: 1.875rem;
+    }
+    .amount {
+      font-size: 2.625rem;
+      color: var(--c-forest-800);
+    }
+    .amount span,
+    .summary,
+    .deadline p > span,
+    .tips {
+      color: var(--c-ink-soft);
+    }
+    .deadline {
+      background: var(--c-fern-25);
+      border-color: var(--c-line);
+    }
+    .deadline :global(.deadline-icon),
+    .tips :global(.tick) {
+      color: var(--c-moss);
+    }
+    .disabled {
+      background: var(--c-line);
+      color: var(--c-ink-soft);
+    }
   }
 </style>
+
+<script>
+  import { daysLeft } from "../lib/countdown";
+
+  for (const el of document.querySelectorAll<HTMLElement>("[data-days-left]")) {
+    el.textContent = String(daysLeft(new Date(el.dataset.daysLeft!)));
+  }
+</script>

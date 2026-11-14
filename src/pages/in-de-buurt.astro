@@ -1,11 +1,30 @@
 ---
 import Base from "../layouts/Base.astro";
 import ComingSoon from "../components/ComingSoon.astro";
+import { event } from "../config/site";
 ---
 
 <Base title="In de buurt">
   <ComingSoon
+    kicker={event.region}
     title="In de buurt"
-    intro="Hier komen tips voor wandelingen, activiteiten, supermarkten en cafés in de buurt."
+    intro="Tips voor de omgeving komen zodra we weten waar het chateau staat."
+    items={[
+      {
+        icon: "cart",
+        title: "Boodschappen",
+        text: "De dichtstbijzijnde supermarkt en bakker.",
+      },
+      {
+        icon: "hike",
+        title: "Wandelen en activiteiten",
+        text: "Routes, kajakken, mountainbiken.",
+      },
+      {
+        icon: "beer",
+        title: "Cafés en brouwerijen",
+        text: "Voor als het bier in het chateau op is.",
+      },
+    ]}
   />
 </Base>

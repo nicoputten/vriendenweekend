@@ -3,9 +3,32 @@ import Base from "../layouts/Base.astro";
 import ComingSoon from "../components/ComingSoon.astro";
 ---
 
-<Base title="Veelgestelde vragen">
+<Base title="Vragen">
   <ComingSoon
+    kicker="FAQ"
     title="Veelgestelde vragen"
-    intro="Hier komen antwoorden op vragen over carpoolen, slaapkamers, huisregels en meer."
+    intro="Antwoorden op de vragen die elk jaar weer in de groepsapp voorbijkomen."
+    items={[
+      {
+        icon: "car",
+        title: "Carpoolen",
+        text: "Hoe we samen naar de Ardennen gaan.",
+      },
+      {
+        icon: "bed",
+        title: "Slaapkamers",
+        text: "Hoe de kamers verdeeld worden.",
+      },
+      {
+        icon: "rules",
+        title: "Huisregels",
+        text: "Wat wel en niet mag in het chateau.",
+      },
+      {
+        icon: "chat",
+        title: "Geld",
+        text: "Wat de €250 dekt en wat er met een overschot gebeurt.",
+      },
+    ]}
   />
 </Base>
