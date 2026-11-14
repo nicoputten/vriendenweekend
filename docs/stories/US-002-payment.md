@@ -9,10 +9,10 @@ As a **participant** I want **to see on the home page how much to pay, by when a
 
 - [x] Home shows the title, dates (13–16 August 2027) and a countdown
 - [x] Amount (€250), deadline (Monday 30 November) and what the money covers are on the home page
-- [x] The pay button opens the bunq.me link with the fixed amount
+- [x] The pay button opens the bunq.me link with the fixed amount prefilled (`?amount=`)
 - [x] Without a link the button reads "Betaallink volgt binnenkort" and is not clickable
 - [x] Works on a 360 px wide screen without horizontal scrolling
 
 ## Notes
 
-The link lives in `src/config/site.ts` (`payment.url`). A unit test checks that it is an `https://bunq.me/` link.
+The link lives in `src/config/site.ts` (`payment.url`). A unit test checks that it is an `https://bunq.me/` link and that its `amount` parameter matches `payment.amountEur`.

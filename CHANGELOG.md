@@ -4,6 +4,12 @@ All notable changes. Format: [Keep a Changelog](https://keepachangelog.com/en/1.
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-14
+
+### Fixed
+
+- The pay button prefills €250 in the bunq.me link.
+
 ## [0.2.0] - 2026-11-14
 
 ### Changed
