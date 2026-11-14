@@ -16,6 +16,8 @@ env:
 
 jobs:
   release:
+    # Gitflow: releases are cut from main only (tag pushes are checked below).
+    if: github.ref_type == 'tag' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
