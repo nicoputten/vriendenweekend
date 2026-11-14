@@ -31,7 +31,11 @@ test.describe("faq", () => {
     await expect(carpool.locator(".answer")).toBeHidden();
     await carpool.locator("summary").click();
     await expect(carpool.locator(".answer")).toBeVisible();
-    await expect(carpool.getByText("Binnenkort")).toBeVisible();
+    await expect(carpool).toContainText("regel je zelf onderling");
+    await expect(carpool.getByText("Binnenkort")).toHaveCount(0);
+    await expect(
+      page.locator("#slaapkamers").getByText("Binnenkort"),
+    ).toBeVisible();
   });
 
   test("a link to a question opens it", async ({ page }) => {
