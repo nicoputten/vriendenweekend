@@ -37,10 +37,10 @@ export const payment = {
   /** Last moment to pay (inclusive). */
   deadline: "2026-11-30T23:59:59+01:00",
   /**
-   * bunq.me link. Leave empty while the link is not final;
-   * the pay button is then rendered disabled.
+   * bunq.me link with `?amount=` so the amount is prefilled. Leave empty
+   * while the link is not final; the pay button is then rendered disabled.
    */
-  url: "https://bunq.me/vriendenardennen2027",
+  url: "https://bunq.me/vriendenardennen2027?amount=250",
   summary:
     "Eén bedrag voor het chateau, al het eten en heel veel bier. Zodra iedereen betaald heeft, wordt er geboekt.",
   tips: [

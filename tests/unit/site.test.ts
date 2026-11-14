@@ -17,6 +17,13 @@ describe("site config", () => {
     }
   });
 
+  it("prefills the payment amount in the bunq.me link", () => {
+    if (payment.url) {
+      const amount = new URL(payment.url).searchParams.get("amount");
+      expect(Number(amount)).toBe(payment.amountEur);
+    }
+  });
+
   it("has unique nav links starting with /", () => {
     const hrefs = nav.map((item) => item.href);
     expect(new Set(hrefs).size).toBe(hrefs.length);
