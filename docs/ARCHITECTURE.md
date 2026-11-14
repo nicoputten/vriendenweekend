@@ -2,7 +2,7 @@
 
 ## Decisions
 
-- **Astro, fully static.** The site is mostly information; static HTML is fast, secure and easy to host. Interactive bits (countdown, menu) are small scripts without a framework.
+- **Astro, fully static.** The site is mostly information; static HTML is fast, secure and easy to host. Interactive bits (countdown, menu, packing list) are small scripts without a framework. State that belongs to one visitor (packing list ticks) stays in their browser via `localStorage`.
 - **One config file.** Everything that changes per edition (dates, amount, deadline, payment link, menu) lives in `src/config/site.ts`. Pages read from it, so a new edition is mostly a config change.
 - **English code, Dutch content.** Code, comments, tests, docs and commits are in English. Only user-facing text on the site is in Dutch.
 - **No private data in the repo.** The repository is public: no real names of participants or organisers, no private domain names, addresses or secrets. Environment-specific values (domain, host IPs) live only on the server.
